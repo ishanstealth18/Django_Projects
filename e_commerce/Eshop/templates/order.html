@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+
+    <style>
+        .navbar{
+            position: sticky;
+            background-color: green;
+            padding : 10px 10px 10px 10px;
+            margin: 0 auto;
+            overflow: hidden;
+            top: 0;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <b><a href="{% url 'home_page' %}" style="color: white; text-decoration: none; padding-left: 15px">Home</a></b>
+        <b style="margin-left: 700px; color:white">Cart Checkout</b>
+        <b>
+        <div style="float: right; right: auto;">
+            {% if user.is_authenticated %}
+                <a href="cart.html" style="color: white; text-decoration: none; padding-right: 15px">Cart</a>
+                <label id="item_count" style="color: white; text-decoration: none;"></label>
+                <a href="order.html" style="color: white; text-decoration: none; padding-right: 15px">Order</a>
+            {% endif %}
+        </div>
+        </b>
+    </nav>
+
+    <table>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th><figure>Product Image</figure></th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Status</th>
+        </tr>
+
+            {% for item in item_record %}
+                <tr>
+                    <td>{{ item.0 }}</td>
+                    <td>{{ item.1 }}</td>
+                    <td><img src="/media/{{ item.2 }}" style="height: 50px; width: 50px; " alt="" id="product_image"/></td>
+                    <td>{{ item.3 }}</td>
+                    <td>{{ item.4 }}</td>
+                    <td><mark>{{ item.5 }}</mark></td>
+                </tr>
+            {% endfor %}
+    </table>
+</body>
+</html>

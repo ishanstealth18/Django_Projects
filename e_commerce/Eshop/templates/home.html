@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    <style>
+        .navbar{
+            position: sticky;
+            background-color: green;
+            padding : 10px 10px 10px 10px;
+            margin: 0 auto;
+            overflow: hidden;
+            top: 0;
+        }
+
+        .categories{
+            width: 300px;
+            height: 600px;
+            border: 2px solid green;
+            margin-top: 10px;
+            float: left;
+        }
+
+        .categories_buttons{
+            width: 250px;
+            background-color: #EAFAF1;
+            border: none;
+            float: left;
+            text-align: left;
+        }
+
+        table{
+            border-bottom: 1px solid #DDD;
+            width: 100%;
+            text-align: left;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: #EAFAF1;
+        }
+        tr:hover td {background:green; cursor: pointer;}
+
+        .products_page{
+            flex-grow: 1;
+            height: 600px;
+            border: 2px solid green;
+            margin-top: 10px;
+            margin-left: 10px;
+            float: right;
+        }
+
+        .flex-container {
+            display: flex;
+            overflow-y: scroll;
+            width: fit-content;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            border: 2px solid green;
+            height: 600px;
+            margin-top: 10px;
+            margin-left: 10px;
+            background-color: #EAFAF1;
+        }
+
+        .flex-container > div {
+            text-align: center;
+           }
+
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 33.33%;
+            padding: 5px;
+        }
+
+        figure{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body onload="update_cart_count('cart_item')">
+        <nav class="navbar">
+            <b>
+                <a href="" style="color: white; text-decoration: none; padding-left: 15px">Home</a>
+                <a href="#store" style="color: white; text-decoration: none; padding-left: 15px">Store</a>
+                <label style="align:center; color: white; padding-left: 550px">E-Commerce Website</label>
+                <div style="float: right; right: auto;">
+                    {% if user.is_authenticated %}
+                        <a href="cart.html" style="color: white; text-decoration: none; padding-right: 15px">Cart</a>
+                        <label id="item_count" style="color: white; text-decoration: none;">{{ items_in_cart }}</label>
+                        <a href="order.html" style="color: white; text-decoration: none; padding-right: 15px">Order</a>
+                    {% endif %}
+                    <a href="signup.html" style="color: white; text-decoration: none; padding-right: 15px">Sign Up</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout_page' %}" onclick="initialize_item_count_logout()" name="logout" id="logout" style="color: white; text-decoration: none; padding0-right: 15px;">Logout</a>
+                        <label>Welcome {{ username }}</label>
+                    {% elif user.is_anonymous %}
+                        <a href="login.html" style="color: white; text-decoration: none; padding0-right: 15px;">Login</a>
+                    {% endif %}
+                </div>
+            </b>
+        </nav>
+
+        <div>
+            <div style="display: flex;">
+                <div class="categories">
+                    <table>
+                        {% for category in category_lists %}
+                        <tr>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <td><button class="categories_buttons" type="submit" id="category_btn" name="category_name" value="{{ category }}">{{ category }}</button></td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+
+                <div class="flex-container">
+                    <div class="row">
+                        <div class="column">
+                            {% for product in filtered_prod %}
+                                    <figure>
+                                        <img src="/media/{{ product.images }}" style="height: 250px; width: 250px; " alt="" id="product_image"/>
+                                        <figcaption id="product_name" style="text-align:center"><b>{{ product.product_name }}</b></figcaption>
+                                        <figcaption id="product_price" style="text-align:center"><b>Rs. {{ product.price }}</b></figcaption>
+                                        <button onclick="add_remove_item_btn('{{ product.id }}', '{{ username }}') " id="{{ product.id }}_add_to_cart" type="submit" name="add_to_cart" value="add_to_cart" style="background-color:green; color: white; width:250px;">Add to cart</button>
+                                        <br>
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" onclick="update_cart_count('add_item')" id="{{ product.id }}_add_items" value="{{ product.id }}_add_items"  name="add_item" style="background-color:green; color: white; width: 20px; visibility: hidden">+</button>
+                                            <button id="{{ product.id }}_no_of_items" name="num_of_items" value="no_of_item_val" style="visibility:hidden">No of items</button>
+                                            <button type="submit" onclick="update_cart_count('remove_item')" id="{{ product.id }}_minus_cart_count" name="remove_item" value="{{ product.id }}_remove_item" style="background-color:green; color: white; width: 20px; visibility: hidden">-</button>
+                                        </form>
+                                    </figure>
+
+                                <script>
+                                    function add_remove_item_btn(product_id_val, user){
+                                        if (user !== ""){
+                                            document.getElementById(product_id_val + '_add_to_cart').style.visibility = 'hidden';
+                                            document.getElementById(product_id_val + '_add_items').style.visibility = 'visible';
+                                            document.getElementById(product_id_val + '_no_of_items').style.visibility = 'visible';
+                                            document.getElementById(product_id_val + '_minus_cart_count').style.visibility = 'visible';
+                                        }
+                                        else{
+                                            alert("Please login!!");
+                                        }
+                                    }
+
+                                    function update_cart_count(update_action){
+                                        var count = document.getElementById('item_count').innerHTML;
+
+                                        if (isNaN(count) || count == "") {
+                                            count = 0;
+                                        }
+                                        if (update_action == "add_item")
+                                        {
+                                            count = parseInt(count) + 1;
+                                            sessionStorage.setItem("no_of_items",count);
+                                            //document.getElementById('item_count').innerHTML = count;
+                                        }
+                                        else if (update_action == "remove_item")
+                                        {
+                                            if (count < 1){
+                                                alert(" Please add items first");
+                                                return;
+                                            }
+                                            count = count - 1;
+                                            sessionStorage.setItem("no_of_items",count);
+                                            //document.getElementById('item_count').innerHTML = count;
+                                        }
+                                        else {
+                                            //document.getElementById('item_count').innerHTML = sessionStorage.getItem("no_of_items");
+                                        }
+                                    }
+
+                                    function check_authentication(){
+                                        alert("Please login and add items!!");
+                                    }
+                                </script>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>
