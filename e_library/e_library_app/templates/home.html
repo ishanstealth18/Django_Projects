@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    <style>
+        .navbar{
+            position: sticky;
+            background-color: #BACF71;
+            padding : 20px 10px 20px 10px;
+            margin: 0 auto;
+            overflow: auto;
+
+        }
+
+        .bodybar{
+            position: sticky;
+            padding : 20px 10px 20px 10px;
+            margin: 0 auto;
+            overflow: auto;
+
+        }
+
+        .bottombar{
+            background-color: #BACF71;
+            float: left;
+            width: 33.33%;
+            padding: 10px;
+            text-align:center;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Clear floats after the columns */
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            }
+
+    </style>
+
+</head>
+<body  class="scrollable">
+    <nav class="navbar">
+        <label><b>E-Library</b></label>
+        <b>
+            <a href="#Home" style="text-decoration:none; color:black; padding-left: 550px;">Home</a>
+            <a href="#Explore" style="text-decoration:none; color:black; padding-left: 30px">Explore</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout_page' %}" style="text-decoration:none; color:black; padding-left: 30px" id="logout">Logout</a>
+                <a href="contribute.html" style="text-decoration:none; color:black; padding-left: 30px" id="contributed">Contributed</a>
+                <label style="padding-left: 30px"><b>Welcome {{ current_user }}</b></label>
+            {% elif user.is_anonymous %}
+                <a href="register.html" style="text-decoration:none; color:black; padding-left: 30px">SignUp/Login</a>
+            {% endif %}
+        </b>
+    </nav>
+
+    <div class="bodybar">
+        <div style="float:left; width:45%; padding-top: 20px; padding-left:35px; ">
+            <img src="https://img.freepik.com/free-photo/abundant-collection-antique-books-wooden-shelves-generated-by-ai_188544-29660.jpg?w=1060" style="width:650px; height:300px;" alt="">
+        </div>
+
+        <div style="float:right; width:50%; padding-top: 20px; padding-left:10px; text-align:center; padding-right:20px;">
+            <h1 style="color:#BACF71; font-size: 70px;">The one stop solution for all your reading needs.</h1>
+            <button type="button" style="color:green; border-radius:5px;border: 1px solid black;"><a href="add_book.html" style="color:green; text-decoration: none;">Add Books</a></button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:50px;">
+        {% load static %}
+        <div class="bottombar" style="">
+            <img src="{% static 'e_library_app/book_icon.png' %}" width="64" height="64" alt="">
+            <p><b><a href="#Home" style="text-decoration:none; color:black;">Books</a></b></p>
+
+        </div>
+        <div class="bottombar">
+            <img src="{% static 'e_library_app/read_icon.png' %}" width="64" height="64" alt="">
+            <p><b><a href="#Home" style="text-decoration:none; color:black;">Read</a></b></p>
+        </div>
+        <div class="bottombar">
+            <img src="{% static 'e_library_app/download_icon.png' %}" width="64" height="64" alt="">
+            <p><b><a href="#Home" style="text-decoration:none; color:black;">Download</a></b></p>
+        </div>
+    </div>
+
+    <div style="margin-top:50px; color: #BACF71; text-align: center;">
+        <h2><b>Add your book</b></h2>
+        <p><b>Help us by contributing to the wider section of the books</b></p>
+        <button type="submit" style="border-radius: 5px; color:green; padding-top: 5px; padding-bottom: 5px; border-width: thin;">Add Book</button>
+    </div>
+
+    <div style="margin-top:50px; background-color: #BACF71; text-align: center; height: 100px;">
+        <p style="padding-top: 50px;">2023 E-Library. All rights reserved.</p>
+    </div>
+
+</body>
+</html>

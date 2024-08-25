@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+
+    <style>
+        .navbar{
+            position: sticky;
+            padding : 10px 10px 0px 10px;
+            margin: 0 auto;
+            overflow: hidden;
+            top: 0;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .register_text{
+            float: left;
+            padding-top: 20px;
+            width:50%;
+            text-align:center;
+            font-size: 70px;
+            display:block;
+            overflow:auto;
+        }
+
+        .register_form{
+            float: right;
+            padding-top: 20px;
+            width:50%;
+            text-align:center;
+            background-color: white;
+            display:block;
+            overflow:auto;
+        }
+
+        input[type=text], select {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+
+        input[type=email], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+
+        input[type=password], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+
+        input[type=submit] {
+        background-color: #276AF8;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="http://127.0.0.1:8000/" style="float:left; text-decoration:none; color:black"><b>Home</b></a>
+        <label><b>Register</b></label>
+    </nav>
+
+    <div class="register_text" style="background-color: #f2f2f2; height: 550px;">
+        <br>
+       <label><b>The best place</b></label>
+        <label style="color:blue;"><b>for your reading needs</b></label>
+    </div>
+
+    <div class="register_form" style="background-color: #f2f2f2;  height: 550px;">
+        <form action="" method="POST" style="text-align: left; background-color: white; padding: 20px 20px 20px 20px; width: 90%;">
+            {% csrf_token %}
+            {{ form.as_div }}
+            <input onclick="register_success_message()" type="submit" value="Signup"><br>
+            <label>Already have an account? </label>
+            <a href="login.html">Login</a>
+        </form>
+    </div>
+    {{ record_added }}
+
+    <script>
+        function register_success_message(){
+            alert("Registration Submitted!!");
+        }
+    </script>
+
+</body>
+</html>
