@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register User</title>
+
+    <style>
+        .title {
+            background-color: yellow;
+            color: green;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .register_form {
+            text-align: center;
+        }
+
+        input[type=submit] {
+        background-color: #d35400;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>Expense Tracker</h1>
+    </div>
+
+    <form action="" method="POST" class="register_form">
+            {% csrf_token %}
+            <b>{{ register_form.as_p }}</b>
+            <input type="submit" name="Submit">
+    </form>
+</body>
+</html>

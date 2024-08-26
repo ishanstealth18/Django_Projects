@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+
+    <style>
+        .title {
+            background-color: yellow;
+            color: green;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .login_form {
+            text-align: center;
+        }
+
+        input[type=submit] {
+        background-color: #d35400;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>Expense Tracker</h1>
+    </div>
+
+    <form action="" method="POST" class="login_form">
+            {% csrf_token %}
+            <b>{{ login_form.as_p }}</b>
+            <input type="submit" name="Submit"><br>
+            <label>Don't have an account?</label>
+            <b><a href="register.html">Register</a></b>
+
+    </form>
+</body>
+</html>
