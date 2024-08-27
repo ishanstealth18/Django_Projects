@@ -13,7 +13,7 @@
         }
 
         .register_form {
-            text-align: center;
+
         }
 
         input[type=submit] {
@@ -32,10 +32,13 @@
         <h1>Expense Tracker</h1>
     </div>
 
-    <form action="" method="POST" class="register_form">
-            {% csrf_token %}
-            <b>{{ register_form.as_p }}</b>
-            <input type="submit" name="Submit">
-    </form>
+    <fieldset>
+        <form action="" method="POST" class="register_form">
+                {% csrf_token %}
+                <b>{{ register_form.as_p }}</b>
+                <input type="submit" name="Submit"><br>
+                <a href="{% url 'login_page' %}">Back to login</a>
+        </form>
+    </fieldset>
 </body>
 </html>
