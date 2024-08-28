@@ -21,6 +21,6 @@ from expense_tracker_app import views
 urlpatterns = [
     #path("expense_tracker_app/", include("expense_tracker_app.urls")),
     path('admin/', admin.site.urls),
-    path('', views.login, name="login_page"),
+    path('', views.user_login, name="login_page"),
     path('register.html', views.register_user, name="register_page"),
 ]
