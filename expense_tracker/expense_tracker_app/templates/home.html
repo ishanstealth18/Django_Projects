@@ -34,11 +34,10 @@
 
     <form action="" method="POST" class="home_form">
             {% csrf_token %}
-            <b>{{ login_form.as_p }}</b>
+            <b>{{ home_form.as_table }}</b>
             <input type="submit" name="Submit"><br>
-            <label>Don't have an account?</label>
-            <b><a href="register.html">Register</a></b>
-
+        {{ user_id }}
     </form>
+
 </body>
 </html>

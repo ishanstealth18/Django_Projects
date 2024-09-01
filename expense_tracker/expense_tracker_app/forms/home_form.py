@@ -1,12 +1,12 @@
 from django import forms
 from django.forms import TextInput
 
-CATEGORY_CHOICES = ['Grocery', 'Dollarama', 'Restaurants', 'Costco', 'House Rent', 'Internet and Mobile', 'Car', 'House'
-                    'and Car Insurance']
+Category_choices = [("Grocery", "Grocery"), ("Rent", "Rent"), ("Restaurant", "Restaurant"), ("Costco", "Costco"), ("Car", "Car"),
+                    ("Insurance", "Insurance"), ("Hydro", "Hydro")]
 
 
 class HomeForm(forms.Form):
-    input_category = forms.CharField(label="Category", required=False, widget=forms.Select(choices=CATEGORY_CHOICES, attrs={
+    input_category = forms.CharField(label="Category", required=False, widget=forms.Select(choices=Category_choices, attrs={
         'style': 'width: 300px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; '
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
@@ -16,8 +16,10 @@ class HomeForm(forms.Form):
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
 
-    input_date = forms.CharField(label="Date", required=False, widget=forms.DateTimeInput(attrs={
+    input_date = forms.DateTimeField(label="Date", required=False, widget=forms.DateInput(attrs={
+        'type': 'date',
         'style': 'width: 300px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; '
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
+
 
