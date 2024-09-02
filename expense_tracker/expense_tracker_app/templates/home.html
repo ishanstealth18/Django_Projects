@@ -35,8 +35,8 @@
     <form action="" method="POST" class="home_form">
             {% csrf_token %}
             <b>{{ home_form.as_table }}</b>
-            <input type="submit" name="Submit"><br>
-        {{ user_id }}
+            <input type="submit" name="Submit"><br><br>
+            <button type="submit" name="logout_btn">Logout</button>
     </form>
 
 </body>

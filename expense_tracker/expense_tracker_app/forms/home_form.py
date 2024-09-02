@@ -1,8 +1,10 @@
 from django import forms
 from django.forms import TextInput
 
-Category_choices = [("Grocery", "Grocery"), ("Rent", "Rent"), ("Restaurant", "Restaurant"), ("Costco", "Costco"), ("Car", "Car"),
-                    ("Insurance", "Insurance"), ("Hydro", "Hydro")]
+Category_choices = [("Grocery", "Grocery"), ("House_Rent", "House_Rent"), ("Restaurant", "Restaurant"), ("Car_EMI", "Car_EMI"),
+                    ("Car_Insurance", "Car_Insurance"), ("Home_Insurance", "Home_Insurance"), ("Hydro", "Hydro"),
+                    ("Entertainment", "Entertainment"), ("Subscription", "Subscription"), ("House_Maintenance", "House_Maintenance"),
+                    ("Outing", "Outing"), ("Shopping", "Shopping"), ("Car", "Car")]
 
 
 class HomeForm(forms.Form):
@@ -11,7 +13,7 @@ class HomeForm(forms.Form):
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
 
-    input_amount = forms.IntegerField(label="Amount", required=False, widget=forms.TextInput(attrs={
+    input_amount = forms.DecimalField(label="Amount", required=False, widget=forms.TextInput(attrs={
         'style': 'width: 300px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; '
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
