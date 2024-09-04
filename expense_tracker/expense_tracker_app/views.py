@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from expense_tracker_app.forms import login_form, register_form, home_form
+from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form
 from expense_tracker_app.models import ExpenseDataModel
 
 
@@ -73,7 +73,35 @@ def home_page(request):
     }
     return render(request, "home.html", context)
 
+
 def user_logout(request):
     logout(request)
     return redirect("login.html")
+
+
+def view_expense(request):
+    context = {}
+    global expense_records
+    if request.method == "POST":
+        form = view_expense_form.ViewExpenseForm(request.POST)
+        if form.is_valid():
+            view_from_date = str(form.cleaned_data["expense_from_date"])
+            view_to_date = str(form.cleaned_data["expense_to_date"])
+            expense_records = ExpenseDataModel.objects.all().get('expense_date')
+
+            form = view_expense_form.ViewExpenseForm
+            context = {
+                "view_expense_form": form,
+                "from_date": view_from_date,
+                "to_date": view_to_date,
+                "records": expense_records,
+            }
+    else:
+        form = view_expense_form.ViewExpenseForm
+        context = {
+            "view_expense_form": form,
+
+        }
+
+    return render(request, "view_expense.html", context)
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Expense</title>
+
+    <style>
+        .title {
+            background-color: yellow;
+            color: green;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .view_expense_body {
+            text-align: center;
+        }
+
+        input[type=submit] {
+        background-color: #d35400;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>Expense Tracker</h1>
+    </div>
+    <div class="view_expense_body">
+        <h1>Enter From Date and To Date below:</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ view_expense_form.as_table }}
+            <input type="submit" name="Submit"><br><br>
+        </form>
+    </div>
+
+    <div>
+
+
+    </div>
+            {{ from_date }}
+            {{ to_date }}
+            {{ records }}
+</body>
+</html>

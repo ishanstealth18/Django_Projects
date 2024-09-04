@@ -16,6 +16,10 @@
             text-align: center;
         }
 
+        .view_edit_delete_expense {
+            text-align: center;
+        }
+
         input[type=submit] {
         background-color: #d35400;
         color: white;
@@ -34,10 +38,23 @@
 
     <form action="" method="POST" class="home_form">
             {% csrf_token %}
+            <h1><b>Submit Expense from below:</b></h1>
             <b>{{ home_form.as_table }}</b>
             <input type="submit" name="Submit"><br><br>
             <button type="submit" name="logout_btn">Logout</button>
     </form>
+
+    <div class="view_edit_delete_expense">
+        <h1><b>View/Edit/Delete Expenses:</b></h1>
+        <a href="view_expense.html" style="text-decoration: none">
+            <button type="button" name="view_expense">View Expense</button>
+        </a>
+            <button type="button" name="edit_expense">Edit Expense</button>
+            <button type="button" name="delete_expense">Delete Expense</button>
+
+        </form>
+
+    </div>
 
 </body>
 </html>
