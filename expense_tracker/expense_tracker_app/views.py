@@ -81,20 +81,31 @@ def user_logout(request):
 
 def view_expense(request):
     context = {}
+    loggedin_user = request.user
     global expense_records
     if request.method == "POST":
         form = view_expense_form.ViewExpenseForm(request.POST)
         if form.is_valid():
-            view_from_date = str(form.cleaned_data["expense_from_date"])
-            view_to_date = str(form.cleaned_data["expense_to_date"])
-            expense_records = ExpenseDataModel.objects.all().get('expense_date')
+            view_from_date = form.cleaned_data["expense_from_date"]
+            view_to_date = form.cleaned_data["expense_to_date"]
+            expense_records = ExpenseDataModel.objects.all().values().filter(user_id=loggedin_user.id)
+
+            expense_data_all = []
+            for entries in range(len(expense_records)):
+                expense_data = []
+                for keys in expense_records[entries]:
+                    if keys == "expense_category":
+                        expense_data.append(expense_records[entries][keys])
+                    elif keys == "expense_amount":
+                        expense_data.append(expense_records[entries][keys])
+                    elif keys == "expense_date":
+                        expense_data.append(expense_records[entries][keys])
+                expense_data_all.append(expense_data)
 
             form = view_expense_form.ViewExpenseForm
             context = {
                 "view_expense_form": form,
-                "from_date": view_from_date,
-                "to_date": view_to_date,
-                "records": expense_records,
+                "all_data": expense_data_all,
             }
     else:
         form = view_expense_form.ViewExpenseForm

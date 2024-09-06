@@ -25,6 +25,23 @@
         border-radius: 4px;
         cursor: pointer;
 
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
     </style>
 </head>
 <body>
@@ -40,12 +57,18 @@
         </form>
     </div>
 
-    <div>
+    <table class="center">
+        <tr>
+            <th>Expense Category</th>
+            <th>Expense Amount</th>
+            <th>Expense Date</th>
+        </tr>
+        {% for item in {{ all_data }} %}
+            <tr>
+                 <td>{{ item }}</td>
+            </tr>
+    </table>
 
-
-    </div>
-            {{ from_date }}
-            {{ to_date }}
-            {{ records }}
+            {{ all_data }}
 </body>
 </html>
