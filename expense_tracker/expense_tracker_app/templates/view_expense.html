@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Expense</title>
+
+    <style>
+        .title {
+            background-color: yellow;
+            color: green;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .view_expense_body {
+            text-align: center;
+        }
+
+        input[type=submit] {
+        background-color: #d35400;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        }
+
+        table, th, td {
+            border:2px solid black;
+            padding: 15px;
+            align: center;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>Expense Tracker</h1>
+    </div>
+    <div class="view_expense_body">
+        <h1>Enter From Date and To Date below:</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <b>{{ view_expense_form.as_table }}</b>
+            <input type="submit" name="Submit"><br><br>
+        </form>
+    </div>
+
+
+    <table class="center">
+        <tr>
+            <th>Expense Category</th>
+            <th>Expense Amount</th>
+            <th>Expense Date</th>
+        </tr>
+
+        {% for item in all_data  %}
+            <tr>
+                {% for val in item  %}
+                <td>{{ val }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    {{ all_data }}
+    {{ from_date }}
+
+</body>
+</html>

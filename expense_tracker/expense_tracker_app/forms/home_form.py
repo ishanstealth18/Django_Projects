@@ -18,7 +18,7 @@ class HomeForm(forms.Form):
                  'border-sizing: border-box; padding: 12px 20px;',
     }))
 
-    input_date = forms.DateTimeField(label="Date", required=False, widget=forms.DateInput(attrs={
+    input_date = forms.DateField(label="Date", required=False, widget=forms.DateInput(attrs={
         'type': 'date',
         'style': 'width: 300px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; '
                  'border-sizing: border-box; padding: 12px 20px;',
