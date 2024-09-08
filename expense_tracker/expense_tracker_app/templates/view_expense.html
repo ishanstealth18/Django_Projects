@@ -24,22 +24,17 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-
         }
 
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+        table, th, td {
+            border:2px solid black;
+            padding: 15px;
+            align: center;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
+        .center {
+            margin-left: auto;
+            margin-right: auto;
         }
 
     </style>
@@ -52,10 +47,11 @@
         <h1>Enter From Date and To Date below:</h1>
         <form method="POST" action="">
             {% csrf_token %}
-            {{ view_expense_form.as_table }}
+            <b>{{ view_expense_form.as_table }}</b>
             <input type="submit" name="Submit"><br><br>
         </form>
     </div>
+
 
     <table class="center">
         <tr>
@@ -63,12 +59,17 @@
             <th>Expense Amount</th>
             <th>Expense Date</th>
         </tr>
-        {% for item in {{ all_data }} %}
-            <tr>
-                 <td>{{ item }}</td>
-            </tr>
-    </table>
 
-            {{ all_data }}
+        {% for item in all_data  %}
+            <tr>
+                {% for val in item  %}
+                <td>{{ val }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    {{ all_data }}
+    {{ from_date }}
+
 </body>
 </html>

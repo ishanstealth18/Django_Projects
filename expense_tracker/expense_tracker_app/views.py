@@ -1,8 +1,11 @@
+from time import strftime
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form
 from expense_tracker_app.models import ExpenseDataModel
+from datetime import date, datetime
 
 
 # Create your views here.
@@ -86,9 +89,15 @@ def view_expense(request):
     if request.method == "POST":
         form = view_expense_form.ViewExpenseForm(request.POST)
         if form.is_valid():
+            # Getting the data from request form
             view_from_date = form.cleaned_data["expense_from_date"]
             view_to_date = form.cleaned_data["expense_to_date"]
-            expense_records = ExpenseDataModel.objects.all().values().filter(user_id=loggedin_user.id)
+            # Converting input date to String for filtering purpose
+            view_from_date = view_from_date.strftime('%Y-%m-%d')
+            view_to_date = view_to_date.strftime('%Y-%m-%d')
+            expense_records = ExpenseDataModel.objects.all().values().filter(user_id=loggedin_user.id,
+                                                                             expense_date__range=[view_from_date,
+                                                                                                  view_to_date])
 
             expense_data_all = []
             for entries in range(len(expense_records)):
@@ -115,4 +124,3 @@ def view_expense(request):
         }
 
     return render(request, "view_expense.html", context)
-
