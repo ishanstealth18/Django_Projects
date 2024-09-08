@@ -8,7 +8,7 @@ from django.db import models
 
 class ExpenseDataModel(models.Model):
     expense_category = models.CharField(max_length=100)
-    expense_amount = models.DecimalField(max_digits=20, decimal_places=3)
-    expense_date = models.DateTimeField()
+    expense_amount = models.CharField(max_length=20)
+    expense_date = models.DateField(max_length=50)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
 
