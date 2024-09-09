@@ -25,4 +25,5 @@ urlpatterns = [
     path('register.html', views.register_user, name="register_page"),
     path('home.html', views.home_page, name="home_page"),
     path('view_expense.html', views.view_expense, name="view_expense_page"),
+    path('edit_expense.html', views.edit_expense, name="edit_expense_page"),
 ]

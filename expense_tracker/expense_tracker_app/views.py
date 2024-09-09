@@ -3,7 +3,7 @@ from time import strftime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form
+from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form, edit_expense_form
 from expense_tracker_app.models import ExpenseDataModel
 from datetime import date, datetime
 
@@ -122,5 +122,47 @@ def view_expense(request):
             "view_expense_form": form,
 
         }
-
     return render(request, "view_expense.html", context)
+
+
+def edit_expense(request):
+    context = {}
+    current_user = request.user
+    if request.method == "POST":
+        form = edit_expense_form.EditExpenseForm(request.POST)
+        if form.is_valid():
+            # Getting the data from request form
+            edit_from_date = form.cleaned_data["expense_from_date"]
+            edit_to_date = form.cleaned_data["expense_to_date"]
+            # Converting input date to String for filtering purpose
+            edit_from_date = edit_from_date.strftime('%Y-%m-%d')
+            edit_to_date = edit_to_date.strftime('%Y-%m-%d')
+            edit_expense_records = ExpenseDataModel.objects.all().values().filter(user_id=current_user.id,
+                                                                             expense_date__range=[edit_from_date,
+                                                                                                  edit_to_date])
+            edit_expense_data_all = []
+            for entries in range(len(edit_expense_records)):
+                edit_expense_data = []
+                for keys in edit_expense_records[entries]:
+                    if keys == "expense_category":
+                        edit_expense_data.append(edit_expense_records[entries][keys])
+                    elif keys == "expense_amount":
+                        edit_expense_data.append(edit_expense_records[entries][keys])
+                    elif keys == "expense_date":
+                        edit_expense_data.append(edit_expense_records[entries][keys])
+                    elif keys == "id":
+                        edit_expense_data.append(edit_expense_records[entries][keys])
+                edit_expense_data_all.append(edit_expense_data)
+
+            form = edit_expense_form.EditExpenseForm
+            context = {
+                "edit_expense_form": form,
+                "all_data": edit_expense_data_all,
+            }
+    else:
+        form = edit_expense_form.EditExpenseForm
+        context = {
+            "edit_expense_form": form,
+        }
+    return render(request, "edit_expense.html", context)
+
