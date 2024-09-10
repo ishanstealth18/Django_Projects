@@ -69,7 +69,7 @@
         <form method="POST" action="">
             {% csrf_token %}
             <b>{{ edit_expense_form.as_table }}</b>
-            <input type="submit" name="Submit"><br><br>
+            <input type="submit" name="submit_to_view_expense_record"><br><br>
         </form>
     </div>
 
@@ -85,10 +85,10 @@
             </tr>
 
             {% for item in all_data  %}
-                <tr id="expense_record_id_{{ item.forloop.counter0 }}">
-                    <td><input type="button" name="select_record" value="Edit Record" onclick="open_edit_expense_form('{{ item.0 }}')"></td>
+                <tr>
+                    <td><input type="button" name="{{ item }}" value="Edit Record" onclick="open_edit_expense_form({{ item.0 }})" id="btn_id"></td>
                     {% for val in item  %}
-                    <td id="expense_data_{{ item.0 }}_{{ val }}" >{{ val }}</td>
+                    <td>{{ val }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -96,27 +96,40 @@
     </form>
 
     <div class="form-popup" id="edit_expense_form">
-        <form method="POST"  class="form-container">
+        <form method="POST"  class="form-container" name="update_expense_data_form">
             {% csrf_token %}
-            <b><label>Expense Id:</label></b><br>
-            <label id="expense_id_current_value"></label><br>
-            <input type="text" name="expense_id" id="expense_id"><br>
+            <b><label>Expense Id:</label></b>
+            <label id="expense_record_id"></label><br><br>
 
             <b><label for="expense_category">Expense Category:</label></b><br>
-            <input type="text" name="expense_category"><br>
+            <select name="expense_category" id="expense_category"><br>
+                <option>Grocery</option>
+                <option>House_Rent</option>
+                <option>Restaurant</option>
+                <option>Car_EMI</option>
+                <option>Car_Insurance</option>
+                <option>Home_Insurance</option>
+                <option>Hydro</option>
+                <option>Entertainment</option>
+                <option>Subscription</option>
+                <option>House_Maintenance</option>
+                <option>Outing</option>
+                <option>Shopping</option>
+                <option>Car</option>
+            </select><br>
 
             <b><label for="expense_amount">Expense Amount:</label></b><br>
             <input type="text" name="expense_amount"><br>
             <b><label for="expense_date">Expense Date:</label></b><br>
-            <input type="text" name="expense_date"><br>
+            <input type="date" name="expense_date"><br><br>
+            <input type="submit" name="submit_updated_expense_details" value="Submit">
+
         </form>
     </div>
 
     <script>
-
-        function open_edit_expense_form(r_id) {
-            let expense_record_id = document.getElementsByName("r_id").id;
-            document.getElementById("expense_id_current_value").innerHTML = expense_record_id;
+        function open_edit_expense_form(id) {
+            document.getElementById("expense_record_id").innerHTML = id;
             document.getElementById("edit_expense_form").style.display = "block";
         }
 

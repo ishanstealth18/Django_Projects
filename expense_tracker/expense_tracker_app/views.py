@@ -129,6 +129,11 @@ def edit_expense(request):
     context = {}
     current_user = request.user
     if request.method == "POST":
+
+        if "update_expense_data_form" in request.POST:
+            form = edit_expense_form.EditExpenseForm(request.POST)
+
+
         form = edit_expense_form.EditExpenseForm(request.POST)
         if form.is_valid():
             # Getting the data from request form
