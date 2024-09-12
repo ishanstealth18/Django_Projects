@@ -73,7 +73,7 @@
         </form>
     </div>
 
-    <form method="POST">
+    <form method="POST" action="{% url 'edit_expense_page' %}">
         {% csrf_token %}
         <table class="center">
             <tr>
@@ -96,7 +96,7 @@
     </form>
 
     <div class="form-popup" id="edit_expense_form">
-        <form method="POST"  class="form-container" name="update_expense_data_form">
+        <form method="POST"  class="form-container" action="{% url 'update_expense_page' %}">
             {% csrf_token %}
             <b><label>Expense Id:</label></b>
             <label id="expense_record_id"></label><br><br>
