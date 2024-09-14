@@ -132,16 +132,20 @@ def edit_expense(request):
         form = edit_expense_form.EditExpenseForm(request.POST)
 
         if "submit_updated_expense_details" in request.POST:
-            updated_expense_id = request.POST['expense_record_id']
+            updated_expense_id = request.POST["record_id"]
             updated_expense_category = request.POST["expense_category"]
             updated_expense_amount = request.POST["expense_amount"]
             updated_expense_date = request.POST["expense_date"]
 
-            all_expense_id = ExpenseDataModel.objects.all().values().filter(id=updated_expense_id)
+            all_expense_id = ExpenseDataModel.objects.get(id=updated_expense_id)
+            all_expense_id.expense_category = updated_expense_category
+            all_expense_id.expense_amount = updated_expense_amount
+            all_expense_id.expense_date = updated_expense_date
+            all_expense_id.save()
+
 
             context = {
                 "edit_expense_form": form,
-                "selected_record": updated_expense_id,
             }
 
         if "submit_to_view_expense_record" in request.POST:
