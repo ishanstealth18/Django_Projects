@@ -129,7 +129,16 @@ def edit_expense(request):
     context = {}
     current_user = request.user
     if request.method == "POST":
-        form = edit_expense_form.EditExpenseForm(request.POST)
+
+        if "delete_expense_details" in request.POST:
+            delete_record_id = request.POST["delete_record_id"]
+            expense_record_obj = ExpenseDataModel.objects.get(id=delete_record_id)
+            expense_record_obj.delete()
+            form = edit_expense_form.EditExpenseForm(request.POST)
+
+            context = {
+                "edit_expense_form": form,
+            }
 
         if "submit_updated_expense_details" in request.POST:
             updated_expense_id = request.POST["record_id"]
@@ -142,13 +151,14 @@ def edit_expense(request):
             all_expense_id.expense_amount = updated_expense_amount
             all_expense_id.expense_date = updated_expense_date
             all_expense_id.save()
-
+            form = edit_expense_form.EditExpenseForm(request.POST)
 
             context = {
                 "edit_expense_form": form,
             }
 
         if "submit_to_view_expense_record" in request.POST:
+            form = edit_expense_form.EditExpenseForm(request.POST)
             if form.is_valid():
                 # Getting the data from request form
                 edit_from_date = form.cleaned_data["expense_from_date"]

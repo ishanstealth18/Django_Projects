@@ -39,9 +39,10 @@
         .form-popup {
             display: none;
             position: fixed;
-            bottom: 0;
-            right: 5px;
-            border: 3px solid #f1f1f1;
+            border: 3px solid black;
+            top: 174px;
+            left: 50%;
+            margin-left:-272px;
 
         }
 
@@ -69,13 +70,13 @@
         <form method="POST" action="">
             {% csrf_token %}
             <b>{{ edit_expense_form.as_table }}</b>
-            <input type="submit" name="submit_to_view_expense_record"><br><br>
+            <input type="submit" name="submit_to_view_expense_record" onclick="show_expense_table()"><br><br>
         </form>
     </div>
 
     <form method="POST" action="{% url 'edit_expense_page' %}">
         {% csrf_token %}
-        <table class="center">
+        <table class="center" id="expense_data_table">
             <tr>
                 <th>Action</th>
                 <th>Expense Id</th>
@@ -86,7 +87,10 @@
 
             {% for item in all_data  %}
                 <tr>
-                    <td><input type="button" name="{{ item }}" value="Edit Record" onclick="open_edit_expense_form({{ item.0 }})" id="btn_id"></td>
+                    <td>
+                        <input type="button" name="{{ item }}" value="Edit Record" onclick="open_edit_expense_form({{ item.0 }})" id="btn_id">
+                        <input type="button" name="{{ item }}" value="Delete Record" id="delete_btn_id" onclick="open_delete_expense_form({{ item.0 }})">
+                    </td>
                     {% for val in item  %}
                     <td>{{ val }}</td>
                     {% endfor %}
@@ -123,9 +127,21 @@
             <b><label for="expense_date">Expense Date:</label></b><br>
             <input type="date" name="expense_date"><br><br>
             <input type="submit" name="submit_updated_expense_details" value="Submit">
+            <button type="button" id="cancel_btn" name="cancel_btn" onclick="close_popup()">Cancel</button>
 
         </form>
     </div>
+
+    <div class="form-popup" id="delete_expense_form">
+        <form method="POST" class="form-container" action="{% url 'delete_expense_page' %}">
+            {% csrf_token %}
+            <b><label style="display:none;">Expense Id:</label></b>
+            <textarea style="display:none;" id="delete_expense_record_id" name="delete_record_id"></textarea><br><br>
+            <H5>Are you sure you want to delete the record ?</H5>
+            <input type="submit" name="delete_expense_details" value="Delete">
+        </form>
+    </div>
+
 
     <script>
         function open_edit_expense_form(id) {
@@ -133,10 +149,16 @@
             document.getElementById("edit_expense_form").style.display = "block";
         }
 
+        function open_delete_expense_form(id) {
+            document.getElementById("delete_expense_record_id").innerHTML = id;
+            document.getElementById("delete_expense_form").style.display = "block";
+        }
+
+        function close_popup() {
+            document.getElementById("edit_expense_form").style.display = "none";
+        }
+
     </script>
-    {{ selected_record }}
-    {{ category }}
-    {{ amount }}
-    {{ date }}
+
 </body>
 </html>
