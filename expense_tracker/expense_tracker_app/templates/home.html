@@ -52,7 +52,18 @@
         <a href="edit_expense.html" style="text-decoration: none">
             <button type="button" name="edit_expense">Edit/Delete Expense</button>
         </a>
+    </div>
 
+    <div>
+        <form class="home_form" method="POST" action="view_chart.html">
+            {% csrf_token %}
+            <h1><b>Charts:</b></h1>
+            <label for="from_date"><b>From Date:</b></label>
+            <input type="date" name="from_date" id="from_date" value="From Date:">
+            <label for="to_date"><b>To Date:</b></label>
+            <input type="date" id="to_date" name="to_date" value="To Date:"><br><br>
+            <input type="submit" name="chart_btn" value="View Charts">
+        </form>
     </div>
 
 </body>

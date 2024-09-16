@@ -167,8 +167,9 @@ def edit_expense(request):
                 edit_from_date = edit_from_date.strftime('%Y-%m-%d')
                 edit_to_date = edit_to_date.strftime('%Y-%m-%d')
                 edit_expense_records = ExpenseDataModel.objects.all().values().filter(user_id=current_user.id,
-                                                                             expense_date__range=[edit_from_date,
-                                                                                                  edit_to_date])
+                                                                                      expense_date__range=[
+                                                                                          edit_from_date,
+                                                                                          edit_to_date])
                 edit_expense_data_all = []
                 for entries in range(len(edit_expense_records)):
                     edit_expense_data = []
@@ -196,9 +197,43 @@ def edit_expense(request):
     return render(request, "edit_expense.html", context)
 
 
-def update_expense_data(request):
-    form = edit_expense_form.EditExpenseForm
+def view_chart(request):
     context = {}
+    current_user = request.user
+    if request.method == "POST":
+        expense_from_date = request.POST["from_date"]
+        expense_to_date = request.POST["to_date"]
+
+        expense_data = ExpenseDataModel.objects.values_list('expense_category', 'expense_amount').filter(
+            user_id=current_user, expense_date__range=[expense_from_date, expense_to_date])
+        expense_data = list(expense_data)
+        expense_data_dict = {}
+
+        # dictionary for expense category and amount
+        for item in expense_data:
+            count = 0
+            expense_data_dict[item[count]] = item[count+1]
 
 
-    return render(request, "edit_expense.html", context)
+        # List of all the categories from expense records
+        expense_category_list = list(expense_data_dict.keys())
+
+        expense_data_total_dict = {}
+        #for category in expense_category_list:
+            #category_amount = 0
+            #for key in expense_data_dict:
+                #if key == category:
+                    #category_amount = category_amount + (expense_data_dict[key])
+            #expense_data_total_dict.update({category: category_amount})
+
+
+        context = {
+            "from_date": expense_from_date,
+            "to_date": expense_to_date,
+            "data": expense_data,
+            "dict": expense_data_dict,
+            "categories": expense_category_list,
+            "total": expense_data_total_dict,
+        }
+
+    return render(request, "view_chart.html", context)

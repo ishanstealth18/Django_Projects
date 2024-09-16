@@ -26,6 +26,7 @@ urlpatterns = [
     path('home.html', views.home_page, name="home_page"),
     path('view_expense.html', views.view_expense, name="view_expense_page"),
     path('edit_expense.html', views.edit_expense, name="edit_expense_page"),
-    path('edit_expense.html', views.update_expense_data, name="update_expense_page"),
-    path('edit_expense.html', views.update_expense_data, name="delete_expense_page"),
+    path('edit_expense.html', views.edit_expense, name="update_expense_page"),
+    path('edit_expense.html', views.edit_expense, name="delete_expense_page"),
+    path('view_chart.html', views.view_chart, name="view_chart_page"),
 ]
