@@ -211,8 +211,10 @@ def view_chart(request):
 
         # dictionary for expense category and amount
         for item in expense_data:
-            count = 0
-            expense_data_dict[item[count]] = item[count+1]
+            if item[0] in expense_data_dict:
+                expense_data_dict[item[0]].append(item[1])
+            else:
+                expense_data_dict[item[0]] = item[1]
 
 
         # List of all the categories from expense records
@@ -237,3 +239,12 @@ def view_chart(request):
         }
 
     return render(request, "view_chart.html", context)
+
+
+def create_expense_data_dict(val1, val2):
+    expense_dict = {}
+    if val1 in expense_dict:
+        expense_dict[val1].append(val2)
+    else:
+        expense_dict[val1] = val2
+    return expense_dict
