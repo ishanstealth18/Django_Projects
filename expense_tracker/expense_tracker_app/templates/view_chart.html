@@ -15,6 +15,22 @@
         .home_form {
             text-align: center;
         }
+
+        table, th, td {
+            border:2px solid black;
+            padding: 15px;
+            align: center;
+
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chart_body {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -23,9 +39,29 @@
         <h1>Expense Tracker</h1>
     </div>
 
-    {{ data }}
-    {{ dict }}
-    {{ categories }}
-    {{ total }}
+    <div class="chart_body">
+        <br>
+        <a href="home.html">
+            <button style="text-align:center;">Back to Home Page</button>
+        </a>
+        <br>
+        <br>
+
+        <table class="center">
+            <tr>
+                <th>Expense Category</th>
+                <th>Expense Amount</th>
+            </tr>
+            {% for key, values in total.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ values }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+
 </body>
 </html>

@@ -204,37 +204,28 @@ def view_chart(request):
         expense_from_date = request.POST["from_date"]
         expense_to_date = request.POST["to_date"]
 
-        expense_data = ExpenseDataModel.objects.values_list('expense_category', 'expense_amount').filter(
+        expense_data = ExpenseDataModel.objects.values('expense_category', 'expense_amount').filter(
             user_id=current_user, expense_date__range=[expense_from_date, expense_to_date])
-        expense_data = list(expense_data)
         expense_data_dict = {}
 
-        # dictionary for expense category and amount
-        for item in expense_data:
-            if item[0] in expense_data_dict:
-                expense_data_dict[item[0]].append(item[1])
+        for data in expense_data:
+            if data['expense_category'] in expense_data_dict:
+                expense_data_dict[data['expense_category']].append(data['expense_amount'])
             else:
-                expense_data_dict[item[0]] = item[1]
-
-
-        # List of all the categories from expense records
-        expense_category_list = list(expense_data_dict.keys())
+                expense_data_dict[data['expense_category']] = [data['expense_amount']]
 
         expense_data_total_dict = {}
-        #for category in expense_category_list:
-            #category_amount = 0
-            #for key in expense_data_dict:
-                #if key == category:
-                    #category_amount = category_amount + (expense_data_dict[key])
-            #expense_data_total_dict.update({category: category_amount})
-
+        for category in expense_data_dict:
+            category_amount = 0
+            for price in expense_data_dict[category]:
+                category_amount = category_amount + float(price)
+            expense_data_total_dict[category] = category_amount
 
         context = {
             "from_date": expense_from_date,
             "to_date": expense_to_date,
             "data": expense_data,
             "dict": expense_data_dict,
-            "categories": expense_category_list,
             "total": expense_data_total_dict,
         }
 
