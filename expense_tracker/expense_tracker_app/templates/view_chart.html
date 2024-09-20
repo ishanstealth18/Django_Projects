@@ -33,6 +33,8 @@
         }
     </style>
 </head>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <body>
 
     <div class="title">
@@ -59,9 +61,30 @@
                 </tr>
             {% endfor %}
         </table>
-
     </div>
 
+    <div id="myPlot" style="width:100%;max-width:700px;font-weight: bold;" class="center"></div>
+
+    {{ total|json_script:"expense_data" }}
+    <script>
+        const expense_data_dict = JSON.parse(document.getElementById('expense_data').textContent);
+        const xArray = Object.keys(expense_data_dict);
+        const yArray = Object.values(expense_data_dict);
+
+        const data = [{
+        x:xArray,
+        y:yArray,
+        type:"bar",
+        orientation:"v",
+        text: yArray.map(String),
+        textposition: 'auto',
+        marker: {color:"rgba(0,0,255,0.6)"}
+        }];
+
+        const layout = {title:"Expense Details"};
+
+        Plotly.newPlot("myPlot", data, layout);
+    </script>
 
 </body>
 </html>
