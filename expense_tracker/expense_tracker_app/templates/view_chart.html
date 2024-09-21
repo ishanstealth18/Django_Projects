@@ -63,7 +63,7 @@
         </table>
     </div>
 
-    <div id="myPlot" style="width:100%;max-width:700px;font-weight: bold;" class="center"></div>
+    <div id="myPlot" style="width:100%;max-width:1000px;font-weight: bold;" class="center"></div>
 
     {{ total|json_script:"expense_data" }}
     <script>
@@ -77,8 +77,10 @@
         type:"bar",
         orientation:"v",
         text: yArray.map(String),
-        textposition: 'auto',
+        textposition: 'outside',
+        texttemplate:  "%{value:.2f}",
         marker: {color:"rgba(0,0,255,0.6)"}
+
         }];
 
         const layout = {title:"Expense Details"};

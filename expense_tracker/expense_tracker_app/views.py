@@ -64,8 +64,9 @@ def home_page(request):
             category = form.cleaned_data["input_category"]
             amount = form.cleaned_data["input_amount"]
             date = form.cleaned_data["input_date"]
+            description = form.cleaned_data["input_description"]
             new_expense_record = ExpenseDataModel(expense_category=category, expense_amount=amount,
-                                                  expense_date=date, user=user)
+                                                  expense_date=date, expense_description=description, user=user)
             new_expense_record.save()
 
     form = home_form.HomeForm
@@ -108,6 +109,8 @@ def view_expense(request):
                     elif keys == "expense_amount":
                         expense_data.append(expense_records[entries][keys])
                     elif keys == "expense_date":
+                        expense_data.append(expense_records[entries][keys])
+                    elif keys == "expense_description":
                         expense_data.append(expense_records[entries][keys])
                 expense_data_all.append(expense_data)
 
