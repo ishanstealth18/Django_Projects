@@ -2,6 +2,7 @@ from time import strftime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form, edit_expense_form
 from expense_tracker_app.models import ExpenseDataModel
@@ -60,6 +61,7 @@ def home_page(request):
             logout(request)
             return redirect('login_page')
 
+
         elif form.is_valid():
             category = form.cleaned_data["input_category"]
             amount = form.cleaned_data["input_amount"]
@@ -68,6 +70,9 @@ def home_page(request):
             new_expense_record = ExpenseDataModel(expense_category=category, expense_amount=amount,
                                                   expense_date=date, expense_description=description, user=user)
             new_expense_record.save()
+        else:
+            raise ValidationError("Please check all the inputs are provided!!")
+
 
     form = home_form.HomeForm
 
@@ -146,15 +151,17 @@ def edit_expense(request):
         if "submit_updated_expense_details" in request.POST:
             updated_expense_id = request.POST["record_id"]
             updated_expense_category = request.POST["expense_category"]
+            updated_expense_description = request.POST["expense_description"]
             updated_expense_amount = request.POST["expense_amount"]
             updated_expense_date = request.POST["expense_date"]
 
             all_expense_id = ExpenseDataModel.objects.get(id=updated_expense_id)
             all_expense_id.expense_category = updated_expense_category
+            all_expense_id.expense_description = updated_expense_description
             all_expense_id.expense_amount = updated_expense_amount
             all_expense_id.expense_date = updated_expense_date
             all_expense_id.save()
-            form = edit_expense_form.EditExpenseForm(request.POST)
+            form = edit_expense_form.EditExpenseForm
 
             context = {
                 "edit_expense_form": form,
@@ -184,6 +191,8 @@ def edit_expense(request):
                         elif keys == "expense_date":
                             edit_expense_data.append(edit_expense_records[entries][keys])
                         elif keys == "id":
+                            edit_expense_data.append(edit_expense_records[entries][keys])
+                        elif keys == "expense_description":
                             edit_expense_data.append(edit_expense_records[entries][keys])
                     edit_expense_data_all.append(edit_expense_data)
 
