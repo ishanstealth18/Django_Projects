@@ -62,9 +62,20 @@
             <input type="date" name="from_date" id="from_date" value="From Date:">
             <label for="to_date"><b>To Date:</b></label>
             <input type="date" id="to_date" name="to_date" value="To Date:"><br><br>
-            <input type="submit" name="chart_btn" value="View Charts">
+            <input type="submit" name="chart_btn" value="View Charts" onclick="check_input_dates()">
         </form>
     </div>
+
+    <script>
+        function check_input_dates() {
+            const from_date = document.getElementById('from_date').value;
+            const to_date = document.getElementById('to_date').value;
+            if (from_date == "" || to_date == "") {
+                alert("Please input From and To dates !!");
+                event.preventDefault();
+            }
+        }
+    </script>
 
 </body>
 </html>
