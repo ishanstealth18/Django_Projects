@@ -1,4 +1,3 @@
-from time import strftime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -6,23 +5,28 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form, edit_expense_form
 from expense_tracker_app.models import ExpenseDataModel
-from datetime import date, datetime
 
 
 # Create your views here.
 
+# Function to register a user
 def register_user(request):
+    # Creating a form from data received in the request
     form = register_form.RegisterForm(request.POST)
+    # Check if method is POST, form is valid and get data from the request
     if request.method == "POST":
         if form.is_valid():
             first_name = form.cleaned_data["register_firstname"]
             last_name = form.cleaned_data["register_lastname"]
             email = form.cleaned_data["register_email"]
             password = form.cleaned_data["register_password"]
+            # Create a new user after getting data from the request
             new_user_record = User.objects.create_user(first_name=first_name, last_name=last_name, email=email,
                                                        password=password, username=first_name)
+            # Save data to database
             new_user_record.save()
 
+    # Creating a blank Register form without data from the request
     form = register_form.RegisterForm
     context = {
         "register_form": form,
@@ -30,6 +34,7 @@ def register_user(request):
     return render(request, "register.html", context)
 
 
+# Login function for a user
 def user_login(request):
     form = login_form.LoginForm(request.POST)
 
@@ -37,7 +42,7 @@ def user_login(request):
         if form.is_valid():
             user_name = form.cleaned_data["login_username"]
             user_password = form.cleaned_data["login_password"]
-
+            # Validating user by using Authenticate function, this will authenticate user from User database mentioned in Settings file
             validate_user = authenticate(request, username=user_name, password=user_password)
             if validate_user is not None:
                 login(request, validate_user)
@@ -53,26 +58,28 @@ def user_login(request):
         return render(request, page_to_open, context)
 
 
+# Function to display Home page
 def home_page(request):
     form = home_form.HomeForm(request.POST)
+    # Getting all the objects from database filtered by user id
     user = User.objects.all().get(id=request.user.id)
     if request.method == "POST":
         if 'logout_btn' in request.POST:
             logout(request)
             return redirect('login_page')
 
-
         elif form.is_valid():
             category = form.cleaned_data["input_category"]
             amount = form.cleaned_data["input_amount"]
             date = form.cleaned_data["input_date"]
             description = form.cleaned_data["input_description"]
+            # Creating a new record in Expense model with input data
             new_expense_record = ExpenseDataModel(expense_category=category, expense_amount=amount,
                                                   expense_date=date, expense_description=description, user=user)
             new_expense_record.save()
         else:
+            # Creating a validation if input is null.
             raise ValidationError("Please check all the inputs are provided!!")
-
 
     form = home_form.HomeForm
 
@@ -83,13 +90,16 @@ def home_page(request):
     return render(request, "home.html", context)
 
 
+# Logout function
 def user_logout(request):
     logout(request)
     return redirect("login.html")
 
 
+# Function to View Expenses
 def view_expense(request):
     context = {}
+    # Getting the current user object
     loggedin_user = request.user
     global expense_records
     if request.method == "POST":
@@ -101,11 +111,13 @@ def view_expense(request):
             # Converting input date to String for filtering purpose
             view_from_date = view_from_date.strftime('%Y-%m-%d')
             view_to_date = view_to_date.strftime('%Y-%m-%d')
+            # Getting the expense data using filter from Expense model
             expense_records = ExpenseDataModel.objects.all().values().filter(user_id=loggedin_user.id,
                                                                              expense_date__range=[view_from_date,
                                                                                                   view_to_date])
 
             expense_data_all = []
+            # Creating a list of each record and passing it to HTML page
             for entries in range(len(expense_records)):
                 expense_data = []
                 for keys in expense_records[entries]:
@@ -133,11 +145,12 @@ def view_expense(request):
     return render(request, "view_expense.html", context)
 
 
+# function to Edit expense
 def edit_expense(request):
     context = {}
     current_user = request.user
     if request.method == "POST":
-
+        # If delete button is pressed, record will be deleted from database
         if "delete_expense_details" in request.POST:
             delete_record_id = request.POST["delete_record_id"]
             expense_record_obj = ExpenseDataModel.objects.get(id=delete_record_id)
@@ -147,14 +160,15 @@ def edit_expense(request):
             context = {
                 "edit_expense_form": form,
             }
-
+        # If Expense details are updated, database will be updated with new details
         if "submit_updated_expense_details" in request.POST:
+            # Getting all the updated data from the request
             updated_expense_id = request.POST["record_id"]
             updated_expense_category = request.POST["expense_category"]
             updated_expense_description = request.POST["expense_description"]
             updated_expense_amount = request.POST["expense_amount"]
             updated_expense_date = request.POST["expense_date"]
-
+            # Updating the database with new data
             all_expense_id = ExpenseDataModel.objects.get(id=updated_expense_id)
             all_expense_id.expense_category = updated_expense_category
             all_expense_id.expense_description = updated_expense_description
@@ -166,7 +180,7 @@ def edit_expense(request):
             context = {
                 "edit_expense_form": form,
             }
-
+        # View data from database
         if "submit_to_view_expense_record" in request.POST:
             form = edit_expense_form.EditExpenseForm(request.POST)
             if form.is_valid():
@@ -209,23 +223,26 @@ def edit_expense(request):
     return render(request, "edit_expense.html", context)
 
 
+# Creating function to view chart
 def view_chart(request):
     context = {}
     current_user = request.user
     if request.method == "POST":
         expense_from_date = request.POST["from_date"]
         expense_to_date = request.POST["to_date"]
-
+        # Getting values after filtering from Expense model. This will return dictionary of values
         expense_data = ExpenseDataModel.objects.values('expense_category', 'expense_amount').filter(
             user_id=current_user, expense_date__range=[expense_from_date, expense_to_date])
         expense_data_dict = {}
 
+        # check if expense category already exist in the dictionary then append expense amount to Category key else
+        # create new category and add expense amount as value to it
         for data in expense_data:
             if data['expense_category'] in expense_data_dict:
                 expense_data_dict[data['expense_category']].append(data['expense_amount'])
             else:
                 expense_data_dict[data['expense_category']] = [data['expense_amount']]
-
+        # Create a dictionary of all expense categories with total expense amount for it
         expense_data_total_dict = {}
         for category in expense_data_dict:
             category_amount = 0
@@ -242,12 +259,3 @@ def view_chart(request):
         }
 
     return render(request, "view_chart.html", context)
-
-
-def create_expense_data_dict(val1, val2):
-    expense_dict = {}
-    if val1 in expense_dict:
-        expense_dict[val1].append(val2)
-    else:
-        expense_dict[val1] = val2
-    return expense_dict
