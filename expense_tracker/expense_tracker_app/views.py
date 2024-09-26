@@ -64,11 +64,8 @@ def home_page(request):
     # Getting all the objects from database filtered by user id
     user = User.objects.all().get(id=request.user.id)
     if request.method == "POST":
-        if 'logout_btn' in request.POST:
-            logout(request)
-            return redirect('login_page')
 
-        elif form.is_valid():
+        if form.is_valid():
             category = form.cleaned_data["input_category"]
             amount = form.cleaned_data["input_amount"]
             date = form.cleaned_data["input_date"]

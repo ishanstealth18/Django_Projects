@@ -41,7 +41,7 @@
             <h1><b>Submit Expense from below:</b></h1>
             <b>{{ home_form.as_table }}</b>
             <input type="submit" name="Submit"><br><br>
-            <button type="submit" name="logout_btn">Logout</button>
+
     </form>
 
     <div class="view_edit_delete_expense">
@@ -64,6 +64,13 @@
             <input type="date" id="to_date" name="to_date" value="To Date:"><br><br>
             <input type="submit" name="chart_btn" value="View Charts" onclick="check_input_dates()">
         </form>
+    </div>
+
+    <div class="home_form">
+        <a href="{% url 'logout_page' %}">
+        <button type="button" name="logout_btn">Logout</button>
+    </a>
+
     </div>
 
     <script>

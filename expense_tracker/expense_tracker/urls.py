@@ -22,6 +22,7 @@ urlpatterns = [
     #path("expense_tracker_app/", include("expense_tracker_app.urls")),
     path('admin/', admin.site.urls),
     path('', views.user_login, name="login_page"),
+    path('', views.user_logout, name="logout_page"),
     path('register.html', views.register_user, name="register_page"),
     path('home.html', views.home_page, name="home_page"),
     path('view_expense.html', views.view_expense, name="view_expense_page"),
