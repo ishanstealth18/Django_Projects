@@ -56,3 +56,8 @@ class ExpenseModelTest(TestCase):
         self.assertEquals(200, delete_expense_page_response.status_code)
         self.assertEquals(200, view_chart_page_response.status_code)
 
+    def test_user_login_credentials(self):
+        c = Client()
+        login_response = c.login(username="name1", password=1234)
+        self.assertEquals(True, login_response)
+
