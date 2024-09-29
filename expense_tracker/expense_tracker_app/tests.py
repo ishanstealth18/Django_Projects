@@ -15,6 +15,8 @@ class ExpenseModelTest(TestCase):
 
         user1 = User.objects.create_user(first_name="name1", last_name="name2", email="name1@gmail.com",
                                  password="1234", username="name1")
+        user2 = User.objects.create_user(first_name="name4", last_name="name5", email="name7@gmail.com",
+                                         password="1234", username="name7")
         ExpenseDataModel.objects.create(
             expense_category="dfasfsfadfadfadfadsfadfadfadsfadfadfadsfadfaadsfasdfadfadsfadsfadfadsfadfadfdsafadfsadfadfasfadsfas",
             expense_amount=11.3, user=user1, expense_date="2024-08-02", expense_description="test_description")
@@ -60,4 +62,16 @@ class ExpenseModelTest(TestCase):
         c = Client()
         login_response = c.login(username="name1", password=1234)
         self.assertEquals(True, login_response)
+
+    def test_login_page(self):
+        c = Client(enforce_csrf_checks=False)
+        response = c.post("/register.html", {"register_firstname": "abc", "register_lastname": "def", "register_email": "abc@gmail.com", "register_password": 12343})
+        response1 = c.post("/register.html",
+                          {"register_firstname": "xxx", "register_lastname": "yyy", "register_email": "aaa@gmail.com",
+                           "register_password": 12343})
+        self.assertEquals(200, response.status_code)
+        self.assertEquals(200, response1.status_code)
+        self.assertEquals(User.objects.count(), 5)
+
+
 
