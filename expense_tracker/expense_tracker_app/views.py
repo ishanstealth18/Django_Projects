@@ -49,13 +49,12 @@ def user_login(request):
         return redirect("home.html")
 
     else:
-        page_to_open = "login.html"
         form = login_form.LoginForm
 
         context = {
             "login_form": form,
         }
-        return render(request, page_to_open, context)
+        return render(request, "login.html", context)
 
 
 # Function to display Home page
