@@ -59,9 +59,10 @@ class ExpenseModelTest(TestCase):
     def test_user_login_credentials(self):
         c = Client()
         login_response = c.login(username="name1", password=1234)
-        navigation_flow_response = c.get("", {"login_username": "name1", "login_password": "1234"}, follow=True)
-        self.assertEquals("home.html")
+        base_url = reverse('base_page')
+        response = c.post(base_url, {'login_username': "name1", 'login_password': 1234}, follow=True)
         self.assertEquals(True, login_response)
+        self.assertRedirects(response, "home.html", status_code=302, target_status_code=200)
 
     def test_register_page(self):
         c = Client(enforce_csrf_checks=False)
