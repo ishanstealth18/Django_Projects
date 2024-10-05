@@ -11,13 +11,15 @@ import names
 
 
 class ExpenseModelTest(TestCase):
+    databases = {"default"}
 
     def setUp(self) -> None:
-        user1 = User.objects.create_user(first_name="name1", last_name="name2", email="name1@gmail.com",
+        global user1
+        self.user1 = User.objects.create_user(first_name="name1", last_name="name2", email="name1@gmail.com",
                                          password="1234", username="name1")
         ExpenseDataModel.objects.create(
             expense_category="dfasfsfadfadfadfadsfadfadfadsfadfadfadsfadfaadsfasdfadfadsfadsfadfadsfadfadfdsafadfsadfadfasfadsfas",
-            expense_amount=11.3, user=user1, expense_date="2024-08-02", expense_description="test_description")
+            expense_amount=11.3, user=self.user1, expense_date="2024-08-02", expense_description="test_description")
 
     def test_category_input_length(self):
         expense_record = ExpenseDataModel.objects.get(expense_amount="11.3")
@@ -60,8 +62,10 @@ class ExpenseModelTest(TestCase):
         c = Client()
         login_response = c.login(username="name1", password=1234)
         base_url = reverse('base_page')
+        # Validate redirect using follow attribute
         response = c.post(base_url, {'login_username': "name1", 'login_password': 1234}, follow=True)
         self.assertEquals(True, login_response)
+        # Redirect validation
         self.assertRedirects(response, "home.html", status_code=302, target_status_code=200)
 
     def test_register_page(self):
@@ -77,5 +81,27 @@ class ExpenseModelTest(TestCase):
                                                  "register_email": random_email, "register_password": 12343})
 
         self.assertEquals(200, response.status_code)
-        self.assertEquals(User.objects.count(), record_count+1)
+        self.assertEquals(User.objects.count(), record_count + 1)
 
+    def test_create_expense_record(self):
+        c = Client()
+        home_url = reverse("home_page")
+        login_response = c.login(username="name1", password=1234)
+        response = c.post(home_url, {"input_category": "Grocery", "input_description": "Walmart", "input_amount": 23.55,
+                                     "input_date": "2024-09-11", "user": self.user1})
+        self.assertEquals(200, response.status_code)
+        self.assertEquals(ExpenseDataModel.objects.count(), 2)
+
+
+    def test_view_expense_data(self):
+        c = Client()
+        view_expense_url = reverse("view_expense_page")
+        home_url = reverse("home_page")
+        login_response = c.login(username="name1", password=1234)
+        response = c.post(home_url, {"input_category": "Grocery", "input_description": "Walmart", "input_amount": 23.55,
+                                     "input_date": "2024-09-11", "user": self.user1})
+        response1 = c.post(home_url, {"input_category": "EMI", "input_description": "Costco", "input_amount": 23.56,
+                                     "input_date": "2024-09-12", "user": self.user1})
+        response = c.post(view_expense_url, {"expense_from_date": "2024-08-01", "expense_to_date": "2024-08-03"})
+        records = response.context["all_data"]
+        self.assertEquals(len(records), 4)
