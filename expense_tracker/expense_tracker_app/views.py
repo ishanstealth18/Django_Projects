@@ -113,6 +113,7 @@ def view_expense(request):
                                                                                                   view_to_date])
 
             expense_data_all = []
+            total_expense_amount = 0.00
             # Creating a list of each record and passing it to HTML page
             for entries in range(len(expense_records)):
                 expense_data = []
@@ -121,6 +122,7 @@ def view_expense(request):
                         expense_data.append(expense_records[entries][keys])
                     elif keys == "expense_amount":
                         expense_data.append(expense_records[entries][keys])
+                        total_expense_amount = total_expense_amount + float(expense_records[entries][keys])
                     elif keys == "expense_date":
                         expense_data.append(expense_records[entries][keys])
                     elif keys == "expense_description":
@@ -131,6 +133,7 @@ def view_expense(request):
             context = {
                 "view_expense_form": form,
                 "all_data": expense_data_all,
+                "total_expense_amount": round(total_expense_amount, 2),
             }
     else:
         form = view_expense_form.ViewExpenseForm
@@ -240,11 +243,13 @@ def view_chart(request):
                 expense_data_dict[data['expense_category']] = [data['expense_amount']]
         # Create a dictionary of all expense categories with total expense amount for it
         expense_data_total_dict = {}
+        total_expense_amount = 0
         for category in expense_data_dict:
             category_amount = 0
             for price in expense_data_dict[category]:
                 category_amount = category_amount + float(price)
             expense_data_total_dict[category] = category_amount
+            total_expense_amount = total_expense_amount + float(expense_data_total_dict[category])
 
         context = {
             "from_date": expense_from_date,
@@ -252,6 +257,7 @@ def view_chart(request):
             "data": expense_data,
             "dict": expense_data_dict,
             "total": expense_data_total_dict,
+            "total_expense_amount": round(total_expense_amount, 2),
         }
 
     return render(request, "view_chart.html", context)

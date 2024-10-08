@@ -59,6 +59,9 @@
         </form>
     </div>
 
+    <div class="view_expense_body">
+        <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
+    </div>
 
     <table class="center">
         <tr>
@@ -66,7 +69,6 @@
             <th>Expense Description</th>
             <th>Expense Amount</th>
             <th>Expense Date</th>
-
         </tr>
 
         {% for item in all_data  %}
@@ -77,6 +79,9 @@
             </tr>
         {% endfor %}
     </table>
+
+
+
 
 </body>
 </html>
