@@ -9,7 +9,7 @@ from expense_tracker_app.models import ExpenseDataModel
 
 # Create your views here.
 
-# Function to register a user
+# Function to register a user. This function will register new users to database.
 def register_user(request):
     # Creating a form from data received in the request
     form = register_form.RegisterForm(request.POST)
@@ -42,7 +42,8 @@ def user_login(request):
         if form.is_valid():
             user_name = form.cleaned_data["login_username"]
             user_password = form.cleaned_data["login_password"]
-            # Validating user by using Authenticate function, this will authenticate user from User database mentioned in Settings file
+            # Validating user by using Authenticate function, this will authenticate user from User database mentioned
+            # in Settings file
             validate_user = authenticate(request, username=user_name, password=user_password)
             if validate_user is not None:
                 login(request, validate_user)
