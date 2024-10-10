@@ -34,10 +34,9 @@ def register_user(request):
     return render(request, "register.html", context)
 
 
-# Login function for a user
+# Login function for a user. This will log in the user and create a session.
 def user_login(request):
     form = login_form.LoginForm(request.POST)
-
     if request.method == "POST":
         if form.is_valid():
             user_name = form.cleaned_data["login_username"]
@@ -51,7 +50,6 @@ def user_login(request):
 
     else:
         form = login_form.LoginForm
-
         context = {
             "login_form": form,
         }
