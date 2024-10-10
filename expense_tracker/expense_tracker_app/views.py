@@ -180,6 +180,7 @@ def edit_expense(request):
                 "edit_expense_form": form,
             }
         # View data from database
+        total_expense_amount = 0.00
         if "submit_to_view_expense_record" in request.POST:
             form = edit_expense_form.EditExpenseForm(request.POST)
             if form.is_valid():
@@ -201,6 +202,7 @@ def edit_expense(request):
                             edit_expense_data.append(edit_expense_records[entries][keys])
                         elif keys == "expense_amount":
                             edit_expense_data.append(edit_expense_records[entries][keys])
+                            total_expense_amount = total_expense_amount + float(edit_expense_records[entries][keys])
                         elif keys == "expense_date":
                             edit_expense_data.append(edit_expense_records[entries][keys])
                         elif keys == "id":
@@ -209,10 +211,11 @@ def edit_expense(request):
                             edit_expense_data.append(edit_expense_records[entries][keys])
                     edit_expense_data_all.append(edit_expense_data)
 
-                form = edit_expense_form.EditExpenseForm
+                form = edit_expense_form.EditExpenseForm(request.POST)
                 context = {
                     "edit_expense_form": form,
                     "all_data": edit_expense_data_all,
+                    "total_expense_amount": round(total_expense_amount, 2),
                 }
     else:
         form = edit_expense_form.EditExpenseForm

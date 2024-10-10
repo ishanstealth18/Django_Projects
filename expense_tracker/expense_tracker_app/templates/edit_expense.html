@@ -74,6 +74,10 @@
         </form>
     </div>
 
+    <div class="edit_expense_body">
+        <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
+    </div>
+
     <form method="POST" action="{% url 'edit_expense_page' %}">
         {% csrf_token %}
         <table class="center" id="expense_data_table">
@@ -81,6 +85,7 @@
                 <th>Action</th>
                 <th>Expense Id</th>
                 <th>Expense Category</th>
+                <th>Expense Description</th>
                 <th>Expense Amount</th>
                 <th>Expense Date</th>
             </tr>
