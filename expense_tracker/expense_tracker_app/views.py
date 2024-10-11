@@ -59,7 +59,7 @@ def user_login(request):
 # Function to display Home page
 def home_page(request):
     form = home_form.HomeForm(request.POST)
-    # Getting all the objects from database filtered by user id
+    # Getting all the objects from database filtered by user ids
     user = User.objects.all().get(id=request.user.id)
     if request.method == "POST":
 
