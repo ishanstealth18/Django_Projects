@@ -91,7 +91,7 @@ def user_logout(request):
     return redirect("login.html")
 
 
-# Function to View Expenses
+# Function to View Expenses, this function allows user to see expense in a given date range
 def view_expense(request):
     context = {}
     # Getting the current user object
