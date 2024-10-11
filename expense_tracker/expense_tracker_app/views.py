@@ -85,7 +85,7 @@ def home_page(request):
     return render(request, "home.html", context)
 
 
-# Logout function
+# Logout function and ends session
 def user_logout(request):
     logout(request)
     return redirect("login.html")
