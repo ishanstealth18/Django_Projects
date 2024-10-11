@@ -91,7 +91,7 @@ def user_logout(request):
     return redirect("login.html")
 
 
-# Function to View Expenses
+# Function to View Expenses, this function allows user to see expense in a given date range
 def view_expense(request):
     context = {}
     # Getting the current user object
@@ -143,7 +143,8 @@ def view_expense(request):
     return render(request, "view_expense.html", context)
 
 
-# function to Edit expense
+# function to Edit expense. This function updates any existing record within given range and can dlete the record as
+# well from database
 def edit_expense(request):
     context = {}
     current_user = request.user
