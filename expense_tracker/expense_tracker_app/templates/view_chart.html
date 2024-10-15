@@ -50,8 +50,23 @@
         <br>
 
         <div class="home_form">
-        <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
-    </div>
+            <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
+            <h3 id="sorted_top3_expenses"><b>Top 3 Expenses: </b></h3>
+            <table class="center">
+            <tr>
+                <th>Expense Category</th>
+                <th>Expense Amount</th>
+            </tr>
+            {% for key, values in top_3_category.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ values }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        <br>
+        <br>
 
         <table class="center">
             <tr>
@@ -91,6 +106,9 @@
 
         Plotly.newPlot("myPlot", data, layout);
     </script>
+
+    {{ top_3_category }}
+    {{ sorted_expense_categories }}
 
 </body>
 </html>
