@@ -1,4 +1,3 @@
-
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -247,12 +246,19 @@ def view_chart(request):
         # Create a dictionary of all expense categories with total expense amount for it
         expense_data_total_dict = {}
         total_expense_amount = 0
+        sorted_total_expense = {}
+        top_3_categories = {}
         for category in expense_data_dict:
             category_amount = 0
             for price in expense_data_dict[category]:
                 category_amount = category_amount + float(price)
             expense_data_total_dict[category] = category_amount
             total_expense_amount = total_expense_amount + float(expense_data_total_dict[category])
+
+        if len(expense_data_total_dict) >= 3:
+            sorted_total_expense = sorted(expense_data_total_dict.items(), key=lambda i: i[1],  reverse=True)
+            for x in range(3):
+                top_3_categories[sorted_total_expense[x][0]] = sorted_total_expense[x][1]
 
         context = {
             "from_date": expense_from_date,
@@ -261,6 +267,8 @@ def view_chart(request):
             "dict": expense_data_dict,
             "total": expense_data_total_dict,
             "total_expense_amount": round(total_expense_amount, 2),
+            "sorted_expense_categories": sorted_total_expense,
+            "top_3_category": top_3_categories,
         }
 
     return render(request, "view_chart.html", context)
