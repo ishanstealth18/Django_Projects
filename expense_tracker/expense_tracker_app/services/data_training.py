@@ -136,7 +136,6 @@ for val in address_column_train_copy.values.tolist():
     else:
         address_list.append(val)
 
-
 for i in address_list:
     if i == ',':
         i = ''
@@ -202,6 +201,7 @@ for i in input_vector_lst:
 print(tokenize_current_address)
 print(tokenize_current_address[0])
 
+
 #############################################################
 
 
@@ -212,7 +212,7 @@ def convert_text2vector(text_lst):
     print("vocab:", vectorizer.vocabulary_)
     vector = vectorizer.transform(text_list)
     vector = vector.toarray()
-    #print("vector: ", vector)
+    # print("vector: ", vector)
     return vector
 
 
@@ -236,6 +236,24 @@ for item in address_list:
     cos_similarity = calculate_similarity(input_vector_list[0], input_vector_list[1])
     similarity_list.append(cos_similarity)
 
-
 print(similarity_list)
 print(len(similarity_list))
+
+
+
+# convert list of cosine similarity into data frame and integrate with indices and url column
+
+address_list_to_df = pd.DataFrame(similarity_list, columns=["Address_Cos_Similarity"])
+print(address_list_to_df)
+
+url_column = real_estate_raw_data["url"].loc[:1815].copy()
+
+
+url_df = pd.DataFrame(url_column.values, columns=["url"])
+print("url shape:", url_df.shape)
+
+combined_similarity_url_list = [address_list_to_df, url_column]
+combined_similarity_url_df = pd.concat(combined_similarity_url_list, axis=1)
+
+print(combined_similarity_url_df.info())
+combined_similarity_url_df.to_excel("similarity_url.xlsx")
