@@ -49,24 +49,31 @@
         <br>
         <br>
 
+
         <div class="home_form">
-            <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
-            <h3 id="sorted_top3_expenses"><b>Top 3 Expenses: </b></h3>
-            <table class="center">
-            <tr>
-                <th>Expense Category</th>
-                <th>Expense Amount</th>
-            </tr>
-            {% for key, values in top_3_category.items %}
+            <form method="POST" action="top_recommendations.html">
+                {% csrf_token %}
+                <h3 id="total_expense"><b>Total Expense: {{ total_expense_amount }}</b></h3>
+                <h3 id="sorted_top3_expenses"><b>Top 3 Expenses: </b></h3>
+                <table class="center">
                 <tr>
-                    <td>{{ key }}</td>
-                    <td>{{ values }}</td>
+                    <th>Expense Category</th>
+                    <th>Expense Amount</th>
+                    <th>Suggestions</th>
                 </tr>
-            {% endfor %}
-            </table>
+                {% for key, values in top_3_category.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ values }}</td>
+                        <td><button type="submit" value="{{ key }}_suggestion_btn" name="suggestion_btn">Suggestions</button></td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </form>
         </div>
         <br>
         <br>
+
 
         <table class="center">
             <tr>
@@ -77,9 +84,11 @@
                 <tr>
                     <td>{{ key }}</td>
                     <td>{{ values }}</td>
+
                 </tr>
             {% endfor %}
         </table>
+        </form>
     </div>
 
     <div id="myPlot" style="width:100%;max-width:700px;font-weight: bold;" class="center"></div>

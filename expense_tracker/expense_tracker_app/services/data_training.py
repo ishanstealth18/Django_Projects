@@ -21,7 +21,6 @@ nltk.download('punkt_tab')
 
 
 def prepare_dataset():
-
     pd.set_option('display.max_columns', None)
     # Creating a dataframe which has columns with numeric values and are required. Normalization and standardization can
     # be done on only numeric values
@@ -123,29 +122,19 @@ def convert_address_to_vector():
     for val in address_column_train_copy.values.tolist():
         if type(val) is list:
             for element in val:
-                address_list.append(element)
+                address_list.append(element.lower())
         else:
             address_list.append(val)
 
-    address_tokens = []
-    for i in address_list:
-        sent_tokenize(i)
-        temp = []
+    return address_list
 
-        for j in word_tokenize(i):
-            if j == ",":
-                j = ""
-            temp.append(j.lower())
-        address_tokens.append(temp)
-    
-    return address_tokens
 
-#def join_df():
-    # Join all dataframes
-    #df_list = [X_train_norm_df, one_hot_encode_df, vector_df]
-    #combined_df = pd.concat(df_list, axis=1)
-    #print(combined_df.info())
-    #combined_df.to_excel("combined.xlsx")
+# def join_df():
+# Join all dataframes
+# df_list = [X_train_norm_df, one_hot_encode_df, vector_df]
+# combined_df = pd.concat(df_list, axis=1)
+# print(combined_df.info())
+# combined_df.to_excel("combined.xlsx")
 
 
 def get_current_location():
@@ -166,21 +155,16 @@ def get_current_location():
 # convert city to vector for cosine similarity with item matrix
 def convert_location_to_vector():
     location = get_current_location()
-    input_vector_lst = [location]
-    print(input_vector_lst)
-    tokenize_current_address = []
+    location = location.lower()
+    location = location.replace(',', '')
+    #input_vector_lst = [location]
+    #print("Location list:", input_vector_lst)
+    #input_vector_lst[0] = input_vector_lst[0].lower()
+    #input_vector_lst[0] = input_vector_lst[0].replace(',', '')
 
-    for i in input_vector_lst:
-        sent_tokenize(i)
-        temp = []
+    #print("input vector list:", input_vector_lst)
 
-        for j in word_tokenize(i):
-            if j == ",":
-                j = ""
-            temp.append(j.lower())
-        tokenize_current_address.append(temp)
-    print(tokenize_current_address)
-    return tokenize_current_address
+    return location
 
 
 #############################################################
@@ -188,12 +172,13 @@ def convert_location_to_vector():
 
 def convert_text2vector(text_lst):
     print("text list:", text_lst)
+
     vectorizer = CountVectorizer(stop_words="english")
     vectorizer.fit(text_lst)
-    print("vocab:", vectorizer.vocabulary_)
     vector = vectorizer.transform(text_lst)
     vector = vector.toarray()
-    # print("vector: ", vector)
+
+    print("vector: ", vector)
     return vector
 
 
@@ -210,11 +195,14 @@ def find_cos_similarity():
 
     similarity_list = []
     address_data = convert_address_to_vector()
+
     print("Address Data: ", address_data)
     for item in address_data:
+        item = item.replace(',', '')
         text_list = [input_address, item]
         input_vector_list = convert_text2vector(text_list)
-        print(input_vector_list[0], input_vector_list[1])
+        # print(input_vector_list)
+        # print(input_vector_list[0], input_vector_list[1])
         cos_similarity = calculate_similarity(input_vector_list[0], input_vector_list[1])
         similarity_list.append(cos_similarity)
 
@@ -240,8 +228,9 @@ def call_top_values():
         top_url_lst.append(real_estate_raw_data.loc[x, ["url"]])
 
     print(top_url_lst)
-
     address_list_to_df.to_excel("similarity_url.xlsx")
+
+    return top_url_lst
 
 
 prepare_dataset()

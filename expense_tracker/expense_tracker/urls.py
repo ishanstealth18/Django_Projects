@@ -30,4 +30,5 @@ urlpatterns = [
     path('edit_expense.html', views.edit_expense, name="update_expense_page"),
     path('edit_expense.html', views.edit_expense, name="delete_expense_page"),
     path('view_chart.html', views.view_chart, name="view_chart_page"),
+    path('top_recommendations.html', views.recommendations, name="recommendations_page"),
 ]

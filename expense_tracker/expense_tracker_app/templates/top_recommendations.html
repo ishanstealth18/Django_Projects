@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top Recommendations</title>
+
+    <style>
+        .title {
+            background-color: yellow;
+            color: green;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .view_expense_body {
+            text-align: center;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="title">
+        <h1>Expense Tracker</h1>
+    </div>
+
+    <div>
+        <br>
+        <a href="home.html">
+            <button style="text-align:center;">Back to Home Page</button>
+        </a>
+        <br>
+        <br>
+        {{ btn_id }}
+        <table class="center">
+                <tr>
+                    <th>Recommendations</th>
+                </tr>
+                {% for values in suggestions %}
+                    <tr>
+                        <td><a href="{{ values }}"></a></td>
+                    </tr>
+                {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

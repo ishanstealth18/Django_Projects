@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from expense_tracker_app.forms import login_form, register_form, home_form, view_expense_form, edit_expense_form
 from expense_tracker_app.models import ExpenseDataModel
+from expense_tracker_app.services import data_training
 
 
 # Create your views here.
@@ -272,3 +273,25 @@ def view_chart(request):
         }
 
     return render(request, "view_chart.html", context)
+
+
+def recommendations(request):
+    context = {}
+    if request.method == "POST":
+        recommend_btn_id = request.POST["suggestion_btn"]
+
+        if "House Rent" in recommend_btn_id:
+            data_training.prepare_dataset()
+            data_training.convert_address_to_vector()
+
+            data_training.get_current_location()
+            data_training.convert_address_to_vector()
+            data_training.find_cos_similarity()
+            suggestion_list = data_training.call_top_values()
+            context = {
+                "btn_id": recommend_btn_id,
+                "suggestions": suggestion_list,
+            }
+
+    return render(request, "top_recommendations.html", context)
+
