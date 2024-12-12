@@ -29,21 +29,21 @@
         <h1>Expense Tracker</h1>
     </div>
 
-    <div>
+    <div class="view_expense_body">
         <br>
-        <a href="home.html">
-            <button style="text-align:center;">Back to Home Page</button>
+        <a href="javascript:history.back()">
+            <button style="text-align:center;">Back</button>
         </a>
         <br>
         <br>
-        {{ btn_id }}
+
         <table class="center">
                 <tr>
                     <th>Recommendations</th>
                 </tr>
                 {% for values in suggestions %}
                     <tr>
-                        <td><a href="{{ values }}"></a></td>
+                        <td><a href="{{ values }}">{{ values }}</a></td>
                     </tr>
                 {% endfor %}
         </table>

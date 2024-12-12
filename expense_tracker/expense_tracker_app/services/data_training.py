@@ -55,7 +55,7 @@ def prepare_dataset():
     # Assign column names as in the real estate copy data
     X_train_norm_df.columns = ["Price($)", "Bedrooms", "Bathrooms", "Size (sqft)", "Visit Counter"]
 
-    print(X_train_norm_df.describe())
+    #print(X_train_norm_df.describe())
 
     # Standardization process
     X_train_std = X_train.copy()
@@ -73,17 +73,17 @@ def prepare_dataset():
     X_train_std_df = pd.DataFrame(X_train_stan)
     X_train_std_df.columns = ["Price($)", "Bedrooms", "Bathrooms", "Size (sqft)", "Visit Counter"]
 
-    print(X_train_std_df.describe())
-    print(X_train_std_df)
+    #print(X_train_std_df.describe())
+    #print(X_train_std_df)
 
     # Convert categorical values to numeric using One Hot Encoder
     categorical_columns = real_estate_raw_data[["Building Type", "Utilities"]].copy()
-    print("categorical columns")
-    print(categorical_columns)
+    #print("categorical columns")
+    #print(categorical_columns)
 
     category_df = pd.DataFrame(categorical_columns)
-    print("category desc")
-    print(category_df.describe())
+    #print("category desc")
+    #print(category_df.describe())
     selected_column_train, selected_column_test = train_test_split(category_df, test_size=0.2)
 
     selected_column_train_copy = selected_column_train.copy()
@@ -103,20 +103,20 @@ def convert_address_to_vector():
     address_column = real_estate_raw_data[["Address"]].copy()
 
     address_df = pd.DataFrame(address_column)
-    print("Address desc")
+    #print("Address desc")
     address_df.replace(',', '', regex=True)
-    print(address_df.info())
+    #print(address_df.info())
 
     address_column_train, address_column_test = train_test_split(address_df, test_size=0.2)
     address_column_train_copy = address_column_train.copy()
     address_column_test_copy = address_column_test.copy()
 
-    print("address train data")
-    print(address_column_train_copy)
+    #print("address train data")
+    #print(address_column_train_copy)
 
     selected_address_column = address_column_train_copy.select_dtypes(include=['object']).columns.to_list()
-    print("selected address column")
-    print(selected_address_column)
+    #print("selected address column")
+    #print(selected_address_column)
 
     address_list = []
     for val in address_column_train_copy.values.tolist():
@@ -142,13 +142,13 @@ def get_current_location():
     g = geocoder.ip('me')
     current_city = g.city
     coordinates = g.latlng
-    print(coordinates)
+    #print(coordinates)
     geolocator = Nominatim(user_agent="expense_tracker_app")
     lat = str(coordinates[0])
     lng = str(coordinates[1])
     location = geolocator.reverse(lat + "," + lng)
     location = str(location)
-    print(location)
+    #print(location)
     return location
 
 
@@ -157,13 +157,6 @@ def convert_location_to_vector():
     location = get_current_location()
     location = location.lower()
     location = location.replace(',', '')
-    #input_vector_lst = [location]
-    #print("Location list:", input_vector_lst)
-    #input_vector_lst[0] = input_vector_lst[0].lower()
-    #input_vector_lst[0] = input_vector_lst[0].replace(',', '')
-
-    #print("input vector list:", input_vector_lst)
-
     return location
 
 
@@ -171,14 +164,12 @@ def convert_location_to_vector():
 
 
 def convert_text2vector(text_lst):
-    print("text list:", text_lst)
-
+    #print("text list:", text_lst)
     vectorizer = CountVectorizer(stop_words="english")
     vectorizer.fit(text_lst)
     vector = vectorizer.transform(text_lst)
     vector = vector.toarray()
-
-    print("vector: ", vector)
+    #print("vector: ", vector)
     return vector
 
 
@@ -196,7 +187,7 @@ def find_cos_similarity():
     similarity_list = []
     address_data = convert_address_to_vector()
 
-    print("Address Data: ", address_data)
+    #print("Address Data: ", address_data)
     for item in address_data:
         item = item.replace(',', '')
         text_list = [input_address, item]
@@ -206,18 +197,17 @@ def find_cos_similarity():
         cos_similarity = calculate_similarity(input_vector_list[0], input_vector_list[1])
         similarity_list.append(cos_similarity)
 
-    print(similarity_list)
-    print(len(similarity_list))
+    #print(similarity_list)
     return similarity_list
 
 
 def call_top_values():
     cos_similar_values_list = find_cos_similarity()
     address_list_to_df = pd.DataFrame(cos_similar_values_list, columns=["Address_Cos_Similarity"])
-    print(address_list_to_df)
+    #print(address_list_to_df)
 
     address_list_to_df = address_list_to_df.loc[~(address_list_to_df["Address_Cos_Similarity"] == 0)]
-    print(address_list_to_df)
+    #print(address_list_to_df)
 
     address_list_to_df = address_list_to_df.sort_values(by="Address_Cos_Similarity", ascending=False)
     top_5_values = address_list_to_df.head(5).index.to_list()
@@ -225,7 +215,7 @@ def call_top_values():
 
     top_url_lst = []
     for x in top_5_values:
-        top_url_lst.append(real_estate_raw_data.loc[x, ["url"]])
+        top_url_lst.append(real_estate_raw_data.loc[x, "url"])
 
     print(top_url_lst)
     address_list_to_df.to_excel("similarity_url.xlsx")
