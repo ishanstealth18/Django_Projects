@@ -283,7 +283,6 @@ def recommendations(request):
         if "House Rent" in recommend_btn_id:
             data_training.prepare_dataset()
             data_training.convert_address_to_vector()
-
             data_training.get_current_location()
             data_training.convert_address_to_vector()
             data_training.find_cos_similarity()
