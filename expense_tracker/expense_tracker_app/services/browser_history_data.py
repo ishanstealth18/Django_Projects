@@ -33,19 +33,12 @@ def get_browser_history_links():
     return rental_link_list
 
 
-para_list = []
-script_list = []
 title_list = []
-meta_list = []
-h4_list = []
-other_data = []
-head_list = []
 p_list = []
 bedroom_list = []
 
+
 def scrape_data(history_links):
-    h4_result = None
-    h4_updated_list = []
     for links in history_links:
         request_response = requests.get(links)
         print("request response :", request_response)
@@ -55,12 +48,7 @@ def scrape_data(history_links):
             # print(soup_data.prettify())
             p_list.append(extract_info(soup_data))
             title_list.append(clean_title_data(soup_data.find_all('title')))
-            #clean_h4_data(soup_data.find_all('h4', class_='card-title'))
-            h4_result = soup_data.find_all('h4', class_='card-title')
-            for r in h4_result:
-                h4_list.append(r.text)
-                #print(h4_list)
-            h4_updated_list = [clean_h4_data(h4_list)]
+
             bedroom_list.append(bedroom_info(soup_data))
         else:
             print("No response from url: ", links)
@@ -68,11 +56,11 @@ def scrape_data(history_links):
     clean_list(p_list)
     print("****************************************************************************")
     clean_list(bedroom_list)
-    #print("Title list: ", title_list)
-    #print("h4 list: ", h4_updated_list)
-    #print("head list:", head_list)
+    print("Title list: ", title_list)
     #print(p_list)
     #print(bedroom_list)
+    return title_list, p_list, bedroom_list
+
 
 def clean_title_data(title_list_to_clean):
     cleaned_title_list = []
@@ -91,20 +79,7 @@ def clean_title_data(title_list_to_clean):
         cleaned_title_list = list(filter(None, cleaned_title_list))
 
     if len(cleaned_title_list) > 0:
-        return cleaned_title_list
-
-
-
-def clean_h4_data(h4_list_to_clean):
-    #print(h4_list_to_clean)
-    cleaned_h4_list = []
-    for r in h4_list_to_clean:
-        r = re.sub('[^a-zA-Z0-9 \n\.]', '', r)
-        r = r.strip()
-        cleaned_h4_list.append(r)
-
-    #print(cleaned_h4_list)
-    return cleaned_h4_list
+        return cleaned_title_list[0]
 
 
 def extract_info(html_content):
@@ -120,7 +95,7 @@ def bedroom_info(html_content):
 
 def clean_list(list_to_clean):
     updated_list = []
-    print("original list: ", list_to_clean)
+    #print("original list: ", list_to_clean)
     for item in list_to_clean:
         for x in item:
             x = str(x)
@@ -131,7 +106,8 @@ def clean_list(list_to_clean):
             updated_list.append(x)
 
     updated_list = list(filter(None, updated_list))
-    print(updated_list)
+    print("Updated list:", updated_list)
 
-history_links_list = get_browser_history_links()
-scrape_data(history_links_list)
+
+#history_links_list = get_browser_history_links()
+#scrape_data(history_links_list)

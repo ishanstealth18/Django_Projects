@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+from expense_tracker_app.services import browser_history_data
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.preprocessing import OneHotEncoder
@@ -12,6 +12,18 @@ from sklearn.feature_extraction.text import CountVectorizer
 # Read raw data file
 real_estate_raw_data = pd.read_excel("D:/Python_Projects/Django_Projects/expense_tracker/updated_data.xlsx")
 nltk.download('punkt_tab')
+
+
+# Get user browse history for better recommendation
+def get_browser_data():
+    title_data = []
+    price_data = []
+    mix_data = []
+    user_browse_links = [browser_history_data.get_browser_history_links()]
+    #print(" User history links :", user_browse_links)
+    for link in user_browse_links:
+        browser_history_data.scrape_data(link)
+
 
 
 # Function to prepare data set. Includes splitting of data into Train and Test set, Standardization and One Hot Encoding
@@ -186,6 +198,7 @@ def find_cos_similarity():
     # print(similarity_list)
     return similarity_list
 
+
 # Function to store top recommended values
 def call_top_values():
     cos_similar_values_list = find_cos_similarity()
@@ -209,9 +222,16 @@ def call_top_values():
     return top_url_lst
 
 
-prepare_dataset()
-convert_address_to_vector()
-get_current_location()
-convert_address_to_vector()
-find_cos_similarity()
-call_top_values()
+
+
+
+
+# Execute the functions
+#prepare_dataset()
+#convert_address_to_vector()
+#get_current_location()
+#convert_address_to_vector()
+#find_cos_similarity()
+#call_top_values()
+get_browser_data()
+
