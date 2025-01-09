@@ -19,18 +19,21 @@ def get_browser_history_links():
             url_visited_list.append(y)
 
     # print(url_visited_list)
-    rental_link_list = []
+    if len(url_visited_list) > 0:
+        rental_link_list = []
 
-    for x in url_visited_list:
-        link_text = x[2]
-        link_text = link_text.lower()
-        # print(link_text)
-        if "condos" in link_text or "houses" in link_text or "apartments" in link_text or "rent" in link_text or "sale" in link_text:
-            if "google search" not in link_text:
-                rental_link_list.append(x[1])
+        for x in url_visited_list:
+            link_text = x[2]
+            link_text = link_text.lower()
+            # print(link_text)
+            if "condos" in link_text or "houses" in link_text or "apartments" in link_text or "rent" in link_text or "sale" in link_text:
+                if "google search" not in link_text:
+                    rental_link_list.append(x[1])
 
-    print("Rental link history:", rental_link_list)
-    return rental_link_list
+        print("Rental link history:", rental_link_list)
+        return rental_link_list
+    else:
+        return None
 
 
 

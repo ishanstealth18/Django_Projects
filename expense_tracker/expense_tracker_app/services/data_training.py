@@ -31,15 +31,19 @@ def get_browser_data():
     title_data = []
     price_data = []
     mix_data = []
-    user_browse_links = [browser_history_data.get_browser_history_links()]
-    # print(" User history links :", user_browse_links)
-    for link in user_browse_links:
-        soup_obj = browser_history_data.scrape_data(link)
-        # print("soup obj:", soup_obj)
-        mix_data.append(browser_history_data.extract_extra_data(soup_obj))
 
-    print("Mix data:", mix_data)
-    return convert_user_history_data_to_vector(mix_data)
+    user_browse_links = browser_history_data.get_browser_history_links()
+    # print(" User history links :", user_browse_links)
+    print("User browse links:", user_browse_links)
+    if len(user_browse_links) > 0:
+        for link in user_browse_links:
+            soup_obj = browser_history_data.scrape_data(link)
+            mix_data.append(browser_history_data.extract_extra_data(soup_obj))
+
+        print("Mix data:", mix_data)
+        return convert_user_history_data_to_vector(mix_data)
+    else:
+        return None
 
 
 # Function to prepare data set. Includes splitting of data into Train and Test set, Standardization and One Hot Encoding
@@ -167,7 +171,7 @@ def get_current_location():
     lng = str(coordinates[1])
     location = geolocator.reverse(lat + "," + lng)
     location = str(location)
-    # print(location)
+    print("current location:", location)
     return location
 
 
@@ -249,6 +253,7 @@ def calculate_similarity(v1, v2):
 def find_address_cos_similarity():
     input_address = clean_raw_location_data()
     similarity_list = []
+    top_url_lst = []
     address_data = filter_address_data()
 
     # print("Address Data: ", address_data)
@@ -261,10 +266,10 @@ def find_address_cos_similarity():
         cos_similarity = calculate_similarity(input_vector_list[0], input_vector_list[1])
         similarity_list.append(cos_similarity)
 
-    call_top_values(similarity_list)
+    top_url_lst = call_top_values(similarity_list)
 
     # print(similarity_list)
-    return similarity_list
+    return top_url_lst
 
 
 # This function will calculate cosine similarity between user history data and existing real estate dataset 'Title' columns
@@ -351,7 +356,7 @@ def reshape_arrays(arr1, arr2):
 def call_top_values(cos_similarity_values_lst):
     # cos_similar_values_list = find_address_cos_similarity()
     address_list_to_df = pd.DataFrame(cos_similarity_values_lst, columns=["Address_Cos_Similarity"])
-    print(address_list_to_df.index)
+    #print(address_list_to_df.index)
 
     #address_list_to_df = address_list_to_df.loc[~(address_list_to_df["Address_Cos_Similarity"] == 0)]
     # print(address_list_to_df)
@@ -359,18 +364,17 @@ def call_top_values(cos_similarity_values_lst):
 
     top_5_values = None
     address_list_to_df = address_list_to_df.sort_values(by="Address_Cos_Similarity", ascending=False)
-    print(address_list_to_df.head(5))
+    #print(address_list_to_df.head(5))
 
     if len(address_list_to_df) >= 5:
         top_5_values = address_list_to_df.head(5).index.to_list()
-        print(top_5_values)
+        #print(top_5_values)
 
     top_url_lst = []
     for x in top_5_values:
         top_url_lst.append(real_estate_raw_data.loc[x-2, "url"])
 
     print(top_url_lst)
-
 
     return top_url_lst
 
@@ -407,5 +411,5 @@ def experiment():
 #call_top_values()
 # get_browser_data()
 # prepare_title_data()
-user_history_title_cosine_similarity()
+#user_history_title_cosine_similarity()
 #experiment()

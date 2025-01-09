@@ -282,10 +282,13 @@ def recommendations(request):
 
         if "House Rent" in recommend_btn_id:
             browser_history_data = data_training.get_browser_data()
-            if browser_history_data.size != 0:
-                data_training.user_history_title_cosine_similarity()
+            print("Browser history data:", browser_history_data)
+            if browser_history_data is not None:
+                print("User has browser history!!! So recommendation based on user history data.")
+                suggestion_list = data_training.user_history_title_cosine_similarity()
             else:
-                data_training.call_top_values()
+                print("User does not have any browser history!! So current location will be used for recommendation.")
+                suggestion_list = data_training.find_address_cos_similarity()
 
 
             #data_training.prepare_dataset()
@@ -296,7 +299,7 @@ def recommendations(request):
             #suggestion_list = data_training.call_top_values()
             context = {
                 "btn_id": recommend_btn_id,
-                #"suggestions": suggestion_list,
+                "suggestions": suggestion_list,
             }
 
     return render(request, "top_recommendations.html", context)
