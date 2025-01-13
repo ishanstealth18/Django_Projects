@@ -280,23 +280,22 @@ def recommendations(request):
     if request.method == "POST":
         recommend_btn_id = request.POST["suggestion_btn"]
 
+        # check if House Rent category is in top 3 monthly expense
         if "House Rent" in recommend_btn_id:
+            # get user history browse data in to vector form after all processing
             browser_history_data = data_training.get_browser_data()
-            print("Browser history data:", browser_history_data)
+            # condition to check if user have previous browse history, calculate cos similarity between Title + Address
+            # from given dataset and filtered data from user browse history
             if browser_history_data is not None:
                 print("User has browser history!!! So recommendation based on user history data.")
                 suggestion_list = data_training.user_history_title_cosine_similarity()
+
+            # condition to check if user does not have previous browse history, calculate cos similarity between current
+            # location and addresses from the dataset.
             else:
                 print("User does not have any browser history!! So current location will be used for recommendation.")
                 suggestion_list = data_training.find_address_cos_similarity()
-
-
-            #data_training.prepare_dataset()
-            #data_training.convert_address_to_vector()
-            #data_training.get_current_location()
-            #data_training.convert_address_to_vector()
-            #data_training.find_cos_similarity()
-            #suggestion_list = data_training.call_top_values()
+            # create context and pass values
             context = {
                 "btn_id": recommend_btn_id,
                 "suggestions": suggestion_list,
